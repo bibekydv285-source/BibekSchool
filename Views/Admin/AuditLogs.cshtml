@@ -1,0 +1,46 @@
+@model List<BibekSchool.Models.AuditLog>
+@{
+    ViewData["Title"] = "Audit Logs";
+    Layout = "_AdminLayout";
+}
+
+<div class="dashboard">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0">Audit Logs</h1>
+            <p class="text-muted">System activity and audit trail</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>User</th>
+                            <th>Action</th>
+                            <th>Entity Type</th>
+                            <th>Entity ID</th>
+                            <th>IP Address</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var log in Model)
+                        {
+                            <tr>
+                                <td>@log.User?.FullName ?? "System</td>
+                                <td><span class="badge bg-primary">@log.Action</span></td>
+                                <td>@log.EntityType</td>
+                                <td>@log.EntityId</td>
+                                <td>@log.IpAddress</td>
+                                <td>@log.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

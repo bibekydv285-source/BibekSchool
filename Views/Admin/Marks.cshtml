@@ -1,0 +1,88 @@
+@model List<BibekSchool.Models.Mark>
+@{
+    ViewData["Title"] = "Manage Marks";
+    Layout = "_AdminLayout";
+}
+
+<div class="dashboard">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-0">Marks</h1>
+                <p class="text-muted">View and manage student marks</p>
+            </div>
+            <a href="@Url.Action("Create", "Mark")" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Add Mark
+            </a>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Class</label>
+                    <select name="classId" class="form-select" asp-items="@(new SelectList(ViewBag.Classes as IEnumerable<BibekSchool.Models.SchoolClass>, "Id", "Name", ViewBag.SelectedClassId))">
+                        <option value="">All Classes</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Subject</label>
+                    <select name="subjectId" class="form-select" asp-items="@(new SelectList(ViewBag.Subjects as IEnumerable<BibekSchool.Models.Subject>, "Id", "Name", ViewBag.SelectedSubjectId))">
+                        <option value="">All Subjects</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Academic Year</label>
+                    <input type="text" name="academicYear" class="form-control" value="@ViewBag.AcademicYear" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Exam Name</label>
+                    <input type="text" name="examName" class="form-control" value="@ViewBag.ExamName" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Student</th>
+                            <th>Admission No.</th>
+                            <th>Subject</th>
+                            <th>Exam</th>
+                            <th>Academic Year</th>
+                            <th>Full Marks</th>
+                            <th>Obtained</th>
+                            <th>Grade</th>
+                            <th>Teacher</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var m in Model)
+                        {
+                            <tr>
+                                <td>@m.Student.User.FullName</td>
+                                <td>@m.Student.AdmissionNumber</td>
+                                <td>@m.Subject.Name</td>
+                                <td>@m.ExamName</td>
+                                <td>@m.AcademicYear</td>
+                                <td>@m.FullMarks</td>
+                                <td class="fw-bold @(m.IsPassed ? "text-success" : "text-danger")">@m.ObtainedMarks</td>
+                                <td>
+                                    <span class="badge @(m.IsPassed ? "bg-success" : "bg-danger")">@m.Grade</span>
+                                </td>
+                                <td>@m.Teacher.User.FullName</td>
+                                <td>@m.ExamDate.ToShortDateString()</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

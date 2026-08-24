@@ -1,0 +1,118 @@
+@model List<BibekSchool.Models.Mark>
+@{
+    ViewData["Title"] = "My Marks";
+    Layout = "_StudentLayout";
+    ViewBag.UnreadNotificationsCount = 0;
+}
+
+<div class="dashboard">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-0">My Marks</h1>
+                <p class="text-muted">View your exam marks and grades</p>
+            </div>
+            <form method="get" class="d-flex gap-2">
+                <select name="academicYear" class="form-select" style="width: auto;" asp-items="@(new SelectList(new List<string> { "2024-2025", "2023-2024" }, ViewBag.AcademicYear))">
+                </select>
+                <button type="submit" class="btn btn-outline-primary">Filter</button>
+            </form>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Subject</th>
+                                <th>Exam</th>
+                                <th>Academic Year</th>
+                                <th>Full Marks</th>
+                                <th>Pass Marks</th>
+                                <th>Obtained</th>
+                                <th>Percentage</th>
+                                <th>Grade</th>
+                                <th>Status</th>
+                                <th>Exam Date</th>
+                                <th>Teacher</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var mark in Model)
+                            {
+                                var percentage = mark.FullMarks > 0 ? Math.Round((double)mark.ObtainedMarks / mark.FullMarks * 100, 2) : 0;
+                                <tr>
+                                    <td>@mark.Subject.Name</td>
+                                    <td>@mark.ExamName</td>
+                                    <td>@mark.AcademicYear</td>
+                                    <td>@mark.FullMarks</td>
+                                    <td>@mark.PassMarks</td>
+                                    <td class="fw-bold">@mark.ObtainedMarks</td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar @(mark.IsPassed ? "bg-success" : "bg-danger")" role="progressbar" style="width: @percentage%"></div>
+                                        </div>
+                                        <small>@percentage%</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge @(mark.IsPassed ? "bg-success" : "bg-danger") fs-6">@mark.Grade</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge @(mark.IsPassed ? "bg-success" : "bg-danger")">
+                                            @(mark.IsPassed ? "Pass" : "Fail")
+                                        </span>
+                                    </td>
+                                    <td>@mark.ExamDate.ToShortDateString()</td>
+                                    <td>@mark.Teacher.User.FullName</td>
+                                    <td>@mark.Remarks</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mt-4">
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <h3 class="text-primary">@Model.Count</h3>
+                        <p class="text-muted mb-0">Total Exams</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <h3 class="text-success">@Model.Count(m => m.IsPassed)</h3>
+                        <p class="text-muted mb-0">Passed</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <h3 class="text-danger">@Model.Count(m => !m.IsPassed)</h3>
+                        <p class="text-muted mb-0">Failed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-clipboard-check fa-3x text-muted mb-3"></i>
+                <h4>No Marks Available</h4>
+                <p class="text-muted">No marks have been recorded for the selected academic year.</p>
+            </div>
+        </div>
+    }
+</div>

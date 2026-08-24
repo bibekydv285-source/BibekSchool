@@ -1,0 +1,383 @@
+/* ==========================================================================
+   Bibek School — Login Page Stylesheet
+   Bigger / more spacious version — scales with screen height so it
+   ALWAYS fits in one page with zero scrolling and zero cropping.
+   ========================================================================== */
+/* ==========================================================================
+   Bibek School — Login Page Stylesheet
+   ========================================================================== */
+
+:root {
+    --primary-color: #4f6ef7;
+    --primary-dark: #3d5ae0;
+    --text-dark: #1e293b;
+    --text-secondary: #64748b;
+    --border-color: #cbd5e1;
+    --input-bg: #f8fafc;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --info-color: #3b82f6;
+    --success-color: #22c55e;
+    color-scheme: light;
+}
+
+html {
+    height: 100%;
+}
+
+body.login-no-scroll {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+.login-page {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(10px, 3vh, 30px) 20px;
+    background: #0f172a;
+    box-sizing: border-box;
+}
+
+/* ... rest of login.css stays exactly the same as your last working version ... */
+
+.login-container {
+    width: 100%;
+    max-width: 500px;
+}
+
+.login-card {
+    background: #ffffff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+    animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================================================
+   Header — bigger, but scales down on shorter screens
+   ========================================================================== */
+
+.login-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    padding: clamp(20px, 5vh, 44px) 36px clamp(16px, 3.5vh, 32px);
+    text-align: center;
+}
+
+    .login-header .logo {
+        color: #ffffff;
+        margin-bottom: clamp(6px, 1.5vh, 14px);
+    }
+
+        .login-header .logo i {
+            font-size: clamp(1.8rem, 5vh, 3rem) !important;
+        }
+
+    .login-header h2 {
+        color: #ffffff;
+        margin-bottom: 6px;
+        font-size: clamp(1.4rem, 4vh, 2rem);
+    }
+
+    .login-header p {
+        color: rgba(255, 255, 255, 0.85) !important;
+        margin-bottom: 0;
+        font-size: clamp(13px, 2.2vh, 16px);
+    }
+
+.login-card form,
+.login-card .login-footer {
+    padding-left: clamp(24px, 5vw, 40px);
+    padding-right: clamp(24px, 5vw, 40px);
+}
+
+.login-card form {
+    padding-top: clamp(16px, 3.5vh, 32px);
+}
+
+/* ==========================================================================
+   Labels
+   ========================================================================== */
+
+.login-page .form-label {
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: clamp(13px, 1.8vh, 15px);
+    margin-bottom: clamp(5px, 1vh, 8px);
+}
+
+/* ==========================================================================
+   Inputs — bigger, still capped so they never overflow
+   ========================================================================== */
+
+.login-page .input-group-text {
+    height: clamp(42px, 7vh, 56px);
+    padding: 0 16px;
+    background-color: var(--input-bg) !important;
+    border: 1px solid var(--border-color);
+    border-right: none;
+    color: var(--primary-color) !important;
+    font-size: clamp(15px, 2vh, 17px);
+}
+
+.login-page .form-control {
+    height: clamp(42px, 7vh, 56px);
+    background-color: var(--input-bg) !important;
+    border: 1px solid var(--border-color);
+    border-left: none;
+    color: var(--text-dark) !important;
+    font-size: clamp(15px, 2vh, 17px);
+    box-shadow: none;
+}
+
+    .login-page .form-control::placeholder {
+        color: #94a3b8 !important;
+        opacity: 1 !important;
+    }
+
+    .login-page .form-control:focus {
+        background-color: #ffffff !important;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(79, 110, 247, 0.15);
+        color: var(--text-dark) !important;
+    }
+
+    .login-page .form-control:-webkit-autofill,
+    .login-page .form-control:-webkit-autofill:hover,
+    .login-page .form-control:-webkit-autofill:focus {
+        -webkit-text-fill-color: var(--text-dark) !important;
+        -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+        box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+        transition: background-color 9999s ease-in-out 0s;
+    }
+
+.login-page .input-group:focus-within .input-group-text,
+.login-page .input-group:focus-within .toggle-password {
+    border-color: var(--primary-color);
+}
+
+.login-page .toggle-password {
+    height: clamp(42px, 7vh, 56px);
+    width: clamp(42px, 7vh, 56px);
+    background-color: var(--input-bg) !important;
+    border: 1px solid var(--border-color);
+    border-left: none;
+    color: var(--text-secondary) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+    .login-page .toggle-password:hover {
+        color: var(--primary-color);
+        background: #eef1ff;
+    }
+
+.login-page .text-danger {
+    font-size: 12px;
+    display: block;
+    margin-top: 4px;
+}
+
+.login-page .mb-3 {
+    margin-bottom: clamp(12px, 2.5vh, 22px) !important;
+}
+
+/* ==========================================================================
+   Remember Me / Forgot Password row
+   ========================================================================== */
+
+.login-page .form-check-label {
+    color: var(--text-dark);
+    font-size: clamp(13px, 1.8vh, 15px);
+}
+
+.login-page .form-check-input {
+    border: 1px solid var(--border-color);
+    width: clamp(16px, 2vh, 20px);
+    height: clamp(16px, 2vh, 20px);
+}
+
+    .login-page .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .login-page .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(79, 110, 247, 0.15);
+    }
+
+.login-page a.small,
+.login-page a.small:link {
+    color: var(--primary-color);
+    font-weight: 500;
+    font-size: clamp(13px, 1.8vh, 15px);
+    text-decoration: none;
+}
+
+    .login-page a.small:hover {
+        color: var(--primary-dark);
+        text-decoration: underline;
+    }
+
+/* ==========================================================================
+   Submit Button — bigger, comfortable to click
+   ========================================================================== */
+
+.login-page .btn-lg {
+    height: clamp(44px, 7vh, 58px);
+    background: var(--primary-color);
+    border: none;
+    font-weight: 600;
+    font-size: clamp(15px, 2vh, 18px);
+    color: #ffffff;
+    border-radius: 10px;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+    .login-page .btn-lg:hover {
+        background: var(--primary-dark);
+    }
+
+    .login-page .btn-lg:active {
+        transform: scale(0.99);
+    }
+
+/* ==========================================================================
+   Register link
+   ========================================================================== */
+
+.login-page .text-center p {
+    color: var(--text-secondary);
+    font-size: clamp(13px, 1.8vh, 15px);
+}
+
+.login-page .text-center a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+    .login-page .text-center a:hover {
+        text-decoration: underline;
+    }
+
+/* ==========================================================================
+   Footer (Secure Login / Encrypted Connection)
+   ========================================================================== */
+
+.login-page .login-footer {
+    padding-top: clamp(10px, 2vh, 18px);
+    padding-bottom: clamp(16px, 3vh, 26px);
+}
+
+    .login-page .login-footer hr {
+        border-color: var(--border-color);
+        opacity: 1;
+        margin-bottom: clamp(8px, 1.5vh, 14px);
+        margin-top: 0;
+    }
+
+    .login-page .login-footer .text-muted {
+        color: var(--text-secondary) !important;
+        font-size: clamp(11px, 1.5vh, 13px);
+    }
+
+    .login-page .login-footer i {
+        color: var(--success-color);
+    }
+
+/* ==========================================================================
+   Password strength indicator
+   ========================================================================== */
+
+.password-strength {
+    height: 4px;
+    border-radius: 2px;
+    margin-top: 6px;
+    background: var(--border-color);
+    overflow: hidden;
+}
+
+.password-strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.password-strength-weak {
+    width: 25%;
+    background: var(--danger-color);
+}
+
+.password-strength-fair {
+    width: 50%;
+    background: var(--warning-color);
+}
+
+.password-strength-good {
+    width: 75%;
+    background: var(--info-color);
+}
+
+.password-strength-strong {
+    width: 100%;
+    background: var(--success-color);
+}
+
+/* ==========================================================================
+   Floating labels (optional alt style, not used by default markup)
+   ========================================================================== */
+
+.floating-label {
+    position: relative;
+}
+
+    .floating-label label {
+        position: absolute;
+        top: 50%;
+        left: 16px;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        pointer-events: none;
+        transition: all 0.2s ease;
+        background: #ffffff;
+        padding: 0 4px;
+    }
+
+    .floating-label .form-control:focus + label,
+    .floating-label .form-control:not(:placeholder-shown) + label {
+        top: 0;
+        font-size: 11px;
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 480px) {
+    .login-card form,
+    .login-card .login-footer {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}

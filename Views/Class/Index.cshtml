@@ -1,0 +1,75 @@
+@model List<BibekSchool.Models.SchoolClass>
+@{
+    ViewData["Title"] = "Classes";
+    Layout = "_AdminLayout";
+}
+
+<div class="dashboard">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-0">Classes</h1>
+                <p class="text-muted">Manage school classes and sections</p>
+            </div>
+            <a href="@Url.Action("Create", "Class")" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Add Class
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Section</th>
+                            <th>Class Teacher</th>
+                            <th>Capacity</th>
+                            <th>Students</th>
+                            <th>Subjects</th>
+                            <th>Academic Year</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var c in Model)
+                        {
+                            <tr>
+                                <td>@c.Name</td>
+                                <td>@c.Section</td>
+                                <td>@(c.ClassTeacher?.User.FullName ?? "Not Assigned")</td>
+                                <td>@c.Capacity</td>
+                                <td>@c.Students.Count</td>
+                                <td>@c.ClassSubjects.Count(cs => cs.IsActive)</td>
+                                <td>@c.AcademicYear</td>
+                                <td>
+                                    <span class="badge @(c.IsActive ? "bg-success" : "bg-secondary")">
+                                        @(c.IsActive ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="@Url.Action("Details", "Class", new { id = c.Id })" class="btn btn-outline-primary" title="Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="@Url.Action("Edit", "Class", new { id = c.Id })" class="btn btn-outline-secondary" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form asp-action="Delete" asp-controller="Class" asp-route-id="@c.Id" method="post" onsubmit="return confirm('Are you sure you want to deactivate this class?');" class="d-inline">
+                                            <button type="submit" class="btn btn-outline-danger" title="Deactivate">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

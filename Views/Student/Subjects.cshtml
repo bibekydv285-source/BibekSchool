@@ -1,0 +1,62 @@
+@model List<BibekSchool.Models.Subject>
+@{
+    ViewData["Title"] = "My Subjects";
+    Layout = "_StudentLayout";
+    ViewBag.UnreadNotificationsCount = 0;
+}
+
+<div class="dashboard">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0">My Subjects</h1>
+            <p class="text-muted">View your assigned subjects and syllabus</p>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row g-4">
+            @foreach (var subject in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 subject-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="mb-0">@subject.Name</h5>
+                                <span class="badge @(subject.IsCoreSubject ? "bg-primary" : "bg-secondary")">
+                                    @(subject.IsCoreSubject ? "Core" : "Optional")
+                                </span>
+                            </div>
+                            <p class="text-muted small mb-3">@subject.Code</p>
+                            @if (!string.IsNullOrEmpty(subject.Description))
+                            {
+                                <p class="card-text small">@subject.Description</p>
+                            }
+                            <hr />
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="fw-bold text-primary">@subject.FullMarks</div>
+                                    <div class="small text-muted">Full Marks</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="fw-bold text-success">@subject.PassMarks</div>
+                                    <div class="small text-muted">Pass Marks</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                <h4>No Subjects Assigned</h4>
+                <p class="text-muted">You don't have any subjects assigned yet.</p>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,98 @@
+@model BibekSchool.ViewModels.TeacherViewModel
+@{
+    ViewData["Title"] = "Delete Teacher";
+    Layout = "_AdminLayout";
+}
+
+<div class="dashboard">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-0 text-danger"><i class="fas fa-user-slash me-2"></i>Delete Teacher</h1>
+                <p class="text-muted">Confirm teacher deactivation</p>
+            </div>
+            <a href="@Url.Action("Teachers", "Admin")" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Teachers
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-danger text-white py-3">
+            <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Confirm Deactivation</h5>
+        </div>
+        <div class="card-body p-4">
+            <div class="alert alert-warning border-0 bg-warning bg-opacity-10 text-warning-emphasis">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>This action will deactivate the teacher account.</strong> The teacher will no longer be able to log in, but their data will be preserved for records.
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="bg-light p-3 rounded">
+                        <label class="form-label fw-bold text-muted small mb-1">Employee ID</label>
+                        <p class="form-control-plaintext mb-0 fw-medium">@Model.EmployeeId</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="bg-light p-3 rounded">
+                        <label class="form-label fw-bold text-muted small mb-1">Full Name</label>
+                        <p class="form-control-plaintext mb-0 fw-medium">@Model.FullName</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="bg-light p-3 rounded">
+                        <label class="form-label fw-bold text-muted small mb-1">Email</label>
+                        <p class="form-control-plaintext mb-0 fw-medium">@Model.Email</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="bg-light p-3 rounded">
+                        <label class="form-label fw-bold text-muted small mb-1">Phone</label>
+                        <p class="form-control-plaintext mb-0 fw-medium">@Model.PhoneNumber</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="bg-light p-3 rounded">
+                        <label class="form-label fw-bold text-muted small mb-1">Qualification</label>
+                        <p class="form-control-plaintext mb-0 fw-medium">@Model.Qualification</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="bg-light p-3 rounded">
+                        <label class="form-label fw-bold text-muted small mb-1">Designation</label>
+                        <p class="form-control-plaintext mb-0 fw-medium">@Model.Designation</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="bg-light p-3 rounded">
+                        <label class="form-label fw-bold text-muted small mb-1">Joining Date</label>
+                        <p class="form-control-plaintext mb-0 fw-medium">@Model.JoiningDate.ToShortDateString()</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="bg-light p-3 rounded">
+                        <label class="form-label fw-bold text-muted small mb-1">Status</label>
+                        <p class="form-control-plaintext mb-0 fw-medium">
+                            <span class="badge bg-success">Active</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4" />
+
+            <form asp-action="DeleteTeacherConfirmed" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div class="d-flex gap-2 justify-content-end">
+                    <a href="@Url.Action("Teachers", "Admin")" class="btn btn-outline-secondary px-4">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn btn-danger px-4">
+                        <i class="fas fa-user-slash me-2"></i>Yes, Deactivate Teacher
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

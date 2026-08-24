@@ -1,0 +1,81 @@
+@{
+    ViewData["Title"] = "Generate Result";
+    Layout = "_AdminLayout";
+}
+
+<div class="dashboard">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-0">Generate Result</h1>
+                <p class="text-muted">Generate a new result for a student</p>
+            </div>
+            <a href="@Url.Action("Index", "Result")" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="Generate" method="post" class="row g-3">
+                <div asp-validation-summary="ModelOnly" class="col-12 text-danger"></div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Student <span class="text-danger">*</span></label>
+                    <select name="studentId" class="form-select" asp-items="@(new SelectList(ViewBag.Students, "Id", "User.FullName"))">
+                        <option value="">Select Student</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Academic Year <span class="text-danger">*</span></label>
+                    <input type="text" name="academicYear" value="@ViewBag.AcademicYear" class="form-control" placeholder="2024-2025" required />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Term <span class="text-danger">*</span></label>
+                    <select name="term" class="form-select" asp-items="@(new SelectList(ViewBag.Terms, ViewBag.Term))">
+                        <option value="">Select Term</option>
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <hr />
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        This will calculate the result based on all marks recorded for the selected student in the selected academic year and term.
+                    </div>
+                </div>
+
+                <div class="col-12 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-calculator me-2"></i>Generate Result
+                    </button>
+                    <a href="@Url.Action("Index", "Result")" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

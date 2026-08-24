@@ -1,0 +1,110 @@
+@model BibekSchool.ViewModels.MarkViewModel
+@{
+    ViewData["Title"] = "Add Mark";
+    Layout = "_AdminLayout";
+}
+
+<div class="dashboard">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-0">Add Mark</h1>
+                <p class="text-muted">Record a new mark for a student</p>
+            </div>
+            <a href="@Url.Action("Index", "Mark")" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="StudentId" class="form-label">Student <span class="text-danger">*</span></label>
+                        <select asp-for="StudentId" class="form-select" asp-items="@(new SelectList(Model.Students, "Id", "User.FullName"))">
+                            <option value="">Select Student</option>
+                        </select>
+                        <span asp-validation-for="StudentId" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="SubjectId" class="form-label">Subject <span class="text-danger">*</span></label>
+                        <select asp-for="SubjectId" class="form-select" asp-items="@(new SelectList(Model.Subjects, "Id", "Name"))">
+                            <option value="">Select Subject</option>
+                        </select>
+                        <span asp-validation-for="SubjectId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="TeacherId" class="form-label">Teacher <span class="text-danger">*</span></label>
+                        <select asp-for="TeacherId" class="form-select" asp-items="@(new SelectList(Model.Teachers, "Id", "User.FullName"))">
+                            <option value="">Select Teacher</option>
+                        </select>
+                        <span asp-validation-for="TeacherId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ExamName" class="form-label">Exam Name <span class="text-danger">*</span></label>
+                        <input asp-for="ExamName" class="form-control" />
+                        <span asp-validation-for="ExamName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="AcademicYear" class="form-label">Academic Year <span class="text-danger">*</span></label>
+                        <input asp-for="AcademicYear" class="form-control" />
+                        <span asp-validation-for="AcademicYear" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="FullMarks" class="form-label">Full Marks</label>
+                        <input asp-for="FullMarks" class="form-control" type="number" min="1" max="1000" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="PassMarks" class="form-label">Pass Marks</label>
+                        <input asp-for="PassMarks" class="form-control" type="number" min="1" max="1000" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="ObtainedMarks" class="form-label">Obtained Marks <span class="text-danger">*</span></label>
+                        <input asp-for="ObtainedMarks" class="form-control" type="number" step="0.01" min="0" max="1000" />
+                        <span asp-validation-for="ObtainedMarks" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Grade" class="form-label">Grade</label>
+                        <input asp-for="Grade" class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ExamDate" class="form-label">Exam Date</label>
+                        <input asp-for="ExamDate" class="form-control" type="date" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Remarks" class="form-label">Remarks</label>
+                    <textarea asp-for="Remarks" class="form-control" rows="2"></textarea>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Save Mark
+                    </button>
+                    <a href="@Url.Action("Index", "Mark")" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,76 @@
+@model BibekSchool.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_Layout";
+    ViewData["NoTopPadding"] = true;
+}
+
+<div class="login-page">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo">
+                    <i class="fas fa-school fa-3x"></i>
+                </div>
+                <h2 class="fw-bold">Bibek School</h2>
+                <p class="text-muted">Sign in to your account</p>
+            </div>
+
+            <form asp-action="Login" method="post">
+                <input type="hidden" asp-for="ReturnUrl" />
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="UsernameOrEmail" class="form-label">Username or Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input asp-for="UsernameOrEmail" class="form-control" placeholder="Enter username or email" autocomplete="username" />
+                    </div>
+                    <span asp-validation-for="UsernameOrEmail" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input asp-for="Password" id="Password" class="form-control" placeholder="Enter your password" autocomplete="current-password" />
+                        <button class="btn btn-outline-secondary toggle-password" type="button" data-target="Password" aria-label="Toggle password visibility">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 d-flex justify-content-between align-items-center">
+                    <div class="form-check">
+                        <input asp-for="RememberMe" class="form-check-input" id="rememberMe" />
+                        <label class="form-check-label" for="rememberMe">Remember Me</label>
+                    </div>
+                    <a href="@Url.Action("ForgotPassword", "Account")" class="text-decoration-none small">Forgot Password?</a>
+                </div>
+
+                <div class="d-grid mb-3">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </button>
+                </div>
+
+                <div class="text-center">
+                    <p class="mb-0">Don't have an account? <a href="@Url.Action("Register", "Account")" class="text-decoration-none">Register as Student</a></p>
+                </div>
+            </form>
+
+            <div class="login-footer mt-4">
+                <hr />
+                <p class="text-muted small mb-0">
+                    <i class="fas fa-shield-alt me-1"></i>Secure Login |
+                    <i class="fas fa-lock me-1"></i>Encrypted Connection
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

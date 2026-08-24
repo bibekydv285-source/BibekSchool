@@ -1,0 +1,156 @@
+@model BibekSchool.ViewModels.StudentViewModel
+@{
+    ViewData["Title"] = "My Profile";
+    Layout = "_StudentLayout";
+    ViewBag.UnreadNotificationsCount = 0;
+}
+
+<div class="dashboard">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0">My Profile</h1>
+            <p class="text-muted">View and update your profile information</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="avatar-xl mx-auto mb-3">
+                        @if (!string.IsNullOrEmpty(Model.ProfileImage))
+                        {
+                            <img src="@Model.ProfileImage" alt="Profile" class="rounded-circle" width="100" height="100" />
+                        }
+                        else
+                        {
+                            <i class="fas fa-user-graduate fa-3x text-primary"></i>
+                        }
+                    </div>
+                    <h4>@Model.FullName</h4>
+                    <p class="text-muted">@Model.Email</p>
+                    <p class="text-muted">@Model.AdmissionNumber</p>
+                    <span class="badge @(Model.IsActive ? "bg-success" : "bg-secondary")">
+                        @(Model.IsActive ? "Active" : "Inactive")
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Personal Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Full Name</label>
+                            <p class="form-control-plaintext">@Model.FullName</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Email</label>
+                            <p class="form-control-plaintext">@Model.Email</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Phone</label>
+                            <p class="form-control-plaintext">@Model.PhoneNumber</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Date of Birth</label>
+                            <p class="form-control-plaintext">@Model.DateOfBirth?.ToShortDateString()</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Gender</label>
+                            <p class="form-control-plaintext">@Model.Gender</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Blood Group</label>
+                            <p class="form-control-plaintext">@Model.BloodGroup</p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Address</label>
+                        <p class="form-control-plaintext">@Model.Address</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Admission Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Admission Number</label>
+                            <p class="form-control-plaintext">@Model.AdmissionNumber</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Admission Date</label>
+                            <p class="form-control-plaintext">@Model.AdmissionDate.ToShortDateString()</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Roll Number</label>
+                            <p class="form-control-plaintext">@Model.RollNumber</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Class</label>
+                            <p class="form-control-plaintext">@Model.ClassName</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Guardian Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Father's Name</label>
+                            <p class="form-control-plaintext">@Model.FatherName</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Mother's Name</label>
+                            <p class="form-control-plaintext">@Model.MotherName</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Father's Phone</label>
+                            <p class="form-control-plaintext">@Model.FatherPhone</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Mother's Phone</label>
+                            <p class="form-control-plaintext">@Model.MotherPhone</p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Guardian Address</label>
+                        <p class="form-control-plaintext">@Model.GuardianAddress</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Medical Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Medical Conditions</label>
+                        <p class="form-control-plaintext">@Model.MedicalConditions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

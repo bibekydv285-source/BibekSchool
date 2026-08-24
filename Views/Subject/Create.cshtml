@@ -1,0 +1,84 @@
+@model BibekSchool.ViewModels.SubjectViewModel
+@{
+    ViewData["Title"] = "Create Subject";
+    Layout = "_AdminLayout";
+}
+
+<div class="dashboard">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0">Create Subject</h1>
+            <p class="text-muted">Add a new subject to the system</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Name" class="form-label">Subject Name <span class="text-danger">*</span></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Code" class="form-label">Subject Code <span class="text-danger">*</span></label>
+                        <input asp-for="Code" class="form-control" />
+                        <span asp-validation-for="Code" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="IsCoreSubject" class="form-label">Core Subject</label>
+                        <div class="form-check form-switch">
+                            <input asp-for="IsCoreSubject" class="form-check-input" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="FullMarks" class="form-label">Full Marks</label>
+                        <input asp-for="FullMarks" class="form-control" type="number" min="1" max="1000" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="PassMarks" class="form-label">Pass Marks</label>
+                        <input asp-for="PassMarks" class="form-control" type="number" min="1" max="1000" />
+                    </div>
+                </div>
+
+                <hr class="my-3" />
+                <h5 class="mb-3">Assign to Classes</h5>
+
+                <div class="mb-3">
+                    <label class="form-label">Classes</label>
+                    <div class="form-control" style="max-height: 200px; overflow-y: auto;">
+                        @foreach (var c in Model.Classes)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="AssignedClassIds" value="@c.Id" />
+                                <label class="form-check-label">@c.Name @c.Section</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Create Subject
+                    </button>
+                    <a href="@Url.Action("Index", "Subject")" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

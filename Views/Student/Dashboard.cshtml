@@ -1,0 +1,223 @@
+@model BibekSchool.ViewModels.StudentDashboardViewModel
+@{
+    ViewData["Title"] = "Student Dashboard";
+    Layout = "_StudentLayout";
+    ViewBag.UnreadNotificationsCount = Model.UnreadNotificationsCount;
+}
+
+<div class="dashboard student-theme">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0">Welcome, @Model.Student?.User.FullName!</h1>
+            <p class="text-muted">@Model.CurrentClass?.Name @Model.CurrentClass?.Section | Admission: @Model.Student?.AdmissionNumber</p>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card h-100 border-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-muted text-uppercase small mb-1">My Subjects</h6>
+                            <h2 class="mb-0 fw-bold text-info">@Model.TotalSubjects</h2>
+                        </div>
+                        <div class="stat-icon bg-info-light">
+                            <i class="fas fa-book fa-2x text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card h-100 border-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-muted text-uppercase small mb-1">Average Score</h6>
+                            <h2 class="mb-0 fw-bold text-success">@Model.AveragePercentage%</h2>
+                        </div>
+                        <div class="stat-icon bg-success-light">
+                            <i class="fas fa-chart-line fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card h-100 border-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-muted text-uppercase small mb-1">Notifications</h6>
+                            <h2 class="mb-0 fw-bold text-warning">@Model.UnreadNotificationsCount</h2>
+                        </div>
+                        <div class="stat-icon bg-warning-light">
+                            <i class="fas fa-bell fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card h-100 @(Model.LatestResult?.IsPassed == true ? "border-success" : "border-danger")">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-muted text-uppercase small mb-1">Latest Result</h6>
+                            <h2 class="mb-0 fw-bold @(Model.LatestResult?.IsPassed == true ? "text-success" : "text-danger")">
+                                @(Model.LatestResult?.OverallGrade ?? "N/A")
+                            </h2>
+                        </div>
+                        <div class="stat-icon @(Model.LatestResult?.IsPassed == true ? "bg-success-light" : "bg-danger-light")">
+                            <i class="fas fa-award fa-2x @(Model.LatestResult?.IsPassed == true ? "text-success" : "text-danger")"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-lg-8">
+            <div class="card h-100 dashboard-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">My Subjects</h5>
+                    <a href="@Url.Action("Subjects", "Student")" class="btn btn-sm btn-outline-info">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.Subjects.Any())
+                    {
+                        <div class="list-group list-group-flush subject-list">
+                            @foreach (var subject in Model.Subjects)
+                            {
+                                <a href="@Url.Action("Marks", "Student")" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">@subject.Name</h6>
+                                        <small class="text-muted">@subject.Code | Full Marks: @subject.FullMarks | Pass Marks: @subject.PassMarks</small>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-muted"></i>
+                                </a>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4 empty-state">
+                            <i class="fas fa-book fa-2x text-muted mb-2"></i>
+                            <p class="text-muted">No subjects assigned</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card h-100 dashboard-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Marks</h5>
+                    <a href="@Url.Action("Marks", "Student")" class="btn btn-sm btn-outline-info">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.RecentMarks.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var mark in Model.RecentMarks.Take(5))
+                            {
+                                var percentage = mark.FullMarks > 0 ? Math.Round((double)mark.ObtainedMarks / mark.FullMarks * 100, 2) : 0;
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">@mark.Subject.Name</h6>
+                                            <small class="text-muted">@mark.ExamName | @mark.AcademicYear</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="badge @(mark.IsPassed ? "bg-success" : "bg-danger") fs-6">
+                                                    @percentage%
+                                                </span>
+                                                <span class="badge @(mark.IsPassed ? "bg-success" : "bg-danger")">
+                                                    @mark.Grade
+                                                </span>
+                                            </div>
+                                            <small class="text-muted">@mark.ObtainedMarks / @mark.FullMarks</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4 empty-state">
+                            <i class="fas fa-clipboard-check fa-2x text-muted mb-2"></i>
+                            <p class="text-muted">No marks available</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mt-3">
+        <div class="col-lg-8">
+            <div class="card h-100 dashboard-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Notifications</h5>
+                    <a href="@Url.Action("Notifications", "Student")" class="btn btn-sm btn-outline-info">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.Notifications.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var notification in Model.Notifications.Take(5))
+                            {
+                                <div class="list-group-item @(!notification.IsRead ? "bg-light" : "")">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="mb-1 @(!notification.IsRead ? "fw-bold" : "")">@notification.Title</h6>
+                                        <small class="text-muted">@notification.CreatedAt.ToString("MMM dd, HH:mm")</small>
+                                    </div>
+                                    <p class="mb-0 small">@notification.Message</p>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4 empty-state">
+                            <i class="fas fa-bell-slash fa-2x text-muted mb-2"></i>
+                            <p class="text-muted">No notifications</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card h-100 dashboard-card">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body quick-actions">
+                    <div class="d-grid gap-2">
+                        <a href="@Url.Action("Profile", "Student")" class="btn btn-outline-info">
+                            <i class="fas fa-user me-2"></i>View Profile
+                        </a>
+                        <a href="@Url.Action("Marks", "Student")" class="btn btn-outline-success">
+                            <i class="fas fa-clipboard-check me-2"></i>View Marks
+                        </a>
+                        <a href="@Url.Action("Results", "Student")" class="btn btn-outline-primary">
+                            <i class="fas fa-chart-bar me-2"></i>View Results
+                        </a>
+                        <a href="@Url.Action("Notifications", "Student")" class="btn btn-outline-warning">
+                            <i class="fas fa-bell me-2"></i>Notifications
+                        </a>
+                        <a href="@Url.Action("ChangePassword", "Profile")" class="btn btn-outline-secondary">
+                            <i class="fas fa-key me-2"></i>Change Password
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+@model List<BibekSchool.Models.SchoolClass>
+@{
+    ViewData["Title"] = "My Classes";
+    Layout = "_TeacherLayout";
+    ViewBag.UnreadNotificationsCount = 0;
+}
+
+<div class="dashboard">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0">My Classes</h1>
+            <p class="text-muted">View and manage your assigned classes</p>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row g-4">
+            @foreach (var classItem in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">@classItem.Name @classItem.Section</h5>
+                            <span class="badge bg-primary">@classItem.AcademicYear</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Class Teacher</label>
+                                <p class="form-control-plaintext">@(classItem.ClassTeacher?.User.FullName ?? "Not Assigned")</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Capacity</label>
+                                <p class="form-control-plaintext">@classItem.Capacity</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Students</label>
+                                <p class="form-control-plaintext fw-bold text-primary">@classItem.Students.Count(s => s.IsActive)</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Subjects</label>
+                                <p class="form-control-plaintext">@classItem.ClassSubjects.Count(cs => cs.IsActive)</p>
+                            </div>
+                            @if (!string.IsNullOrEmpty(classItem.Description))
+                            {
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Description</label>
+                                    <p class="form-control-plaintext small">@classItem.Description</p>
+                                </div>
+                            }
+                        </div>
+                        <div class="card-footer">
+                            <a href="@Url.Action("Students", "Teacher", new { classId = classItem.Id })" class="btn btn-primary w-100">
+                                <i class="fas fa-users me-2"></i>View Students
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-door-open fa-3x text-muted mb-3"></i>
+                <h4>No Classes Assigned</h4>
+                <p class="text-muted">You don't have any classes assigned yet.</p>
+            </div>
+        </div>
+    }
+</div>

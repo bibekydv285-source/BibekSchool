@@ -1,0 +1,84 @@
+@model List<BibekSchool.ViewModels.TeacherViewModel>
+@{
+    ViewData["Title"] = "Manage Teachers";
+    Layout = "_AdminLayout";
+}
+
+<div class="dashboard">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-0">Teachers</h1>
+                <p class="text-muted">Manage teacher records</p>
+            </div>
+            <a href="@Url.Action("CreateTeacher", "Admin")" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Add Teacher
+            </a>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label">Search</label>
+                    <input type="text" name="search" class="form-control" placeholder="Search by name, employee ID, email..." value="@ViewBag.Search" />
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-2"></i>Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Qualification</th>
+                            <th>Designation</th>
+                            <th>Joining Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var teacher in Model)
+                        {
+                            <tr>
+                                <td>@teacher.EmployeeId</td>
+                                <td>@teacher.FullName</td>
+                                <td>@teacher.Email</td>
+                                <td>@teacher.PhoneNumber</td>
+                                <td>@teacher.Qualification</td>
+                                <td>@teacher.Designation</td>
+                                <td>@teacher.JoiningDate.ToShortDateString()</td>
+                                <td>
+                                    <span class="badge @(teacher.IsActive ? "bg-success" : "bg-secondary")">
+                                        @(teacher.IsActive ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="@Url.Action("EditTeacher", "Admin", new { id = teacher.Id })" class="btn btn-outline-primary" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="@Url.Action("DeleteTeacher", "Admin", new { id = teacher.Id })" class="btn btn-outline-danger" title="Deactivate">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

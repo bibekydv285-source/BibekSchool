@@ -1,0 +1,205 @@
+@model BibekSchool.Models.SchoolClass
+@{
+    ViewData["Title"] = "Class Details";
+    Layout = "_AdminLayout";
+}
+
+<div class="dashboard">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-0">@Model.Name @Model.Section</h1>
+                <p class="text-muted">Class Details</p>
+            </div>
+            <div>
+                <a href="@Url.Action("Edit", "Class", new { id = Model.Id })" class="btn btn-outline-primary me-2">
+                    <i class="fas fa-edit me-2"></i>Edit
+                </a>
+                <a href="@Url.Action("Index", "Class")" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Class Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Class Name</label>
+                        <p class="form-control-plaintext fs-5">@Model.Name @Model.Section</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Class Teacher</label>
+                        <p class="form-control-plaintext">@(Model.ClassTeacher?.User.FullName ?? "Not Assigned")</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Capacity</label>
+                        <p class="form-control-plaintext">@Model.Capacity students</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Current Students</label>
+                        <p class="form-control-plaintext fw-bold text-primary">@Model.Students.Count</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Academic Year</label>
+                        <p class="form-control-plaintext">@Model.AcademicYear</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Status</label>
+                        <p class="form-control-plaintext">
+                            <span class="badge @(Model.IsActive ? "bg-success" : "bg-secondary")">
+                                @(Model.IsActive ? "Active" : "Inactive")
+                            </span>
+                        </p>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Description</label>
+                            <p class="form-control-plaintext">@Model.Description</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Students (@Model.Students.Count(s => s.IsActive))</h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.Students.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Admission No.</th>
+                                        <th>Name</th>
+                                        <th>Roll No.</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var student in Model.Students.Where(s => s.IsActive))
+                                    {
+                                        <tr>
+                                            <td>@student.AdmissionNumber</td>
+                                            <td>@student.User.FullName</td>
+                                            <td>@student.RollNumber</td>
+                                            <td>@student.User.Email</td>
+                                            <td>@student.User.PhoneNumber</td>
+                                            <td>
+                                                <span class="badge @(student.IsActive ? "bg-success" : "bg-secondary")">
+                                                    @(student.IsActive ? "Active" : "Inactive")
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <p class="text-muted">No students enrolled</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Assigned Subjects (@Model.ClassSubjects.Count(cs => cs.IsActive))</h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.ClassSubjects.Any(cs => cs.IsActive))
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Code</th>
+                                        <th>Type</th>
+                                        <th>Full Marks</th>
+                                        <th>Pass Marks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var cs in Model.ClassSubjects.Where(cs => cs.IsActive))
+                                    {
+                                        <tr>
+                                            <td>@cs.Subject.Name</td>
+                                            <td>@cs.Subject.Code</td>
+                                            <td>
+                                                <span class="badge @(cs.Subject.IsCoreSubject ? "bg-primary" : "bg-secondary")">
+                                                    @(cs.Subject.IsCoreSubject ? "Core" : "Optional")
+                                                </span>
+                                            </td>
+                                            <td>@cs.Subject.FullMarks</td>
+                                            <td>@cs.Subject.PassMarks</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <p class="text-muted">No subjects assigned</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Assigned Teachers (@Model.TeacherAssignments.Count(ta => ta.IsActive))</h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.TeacherAssignments.Any(ta => ta.IsActive))
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Teacher</th>
+                                        <th>Subject</th>
+                                        <th>Academic Year</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var ta in Model.TeacherAssignments.Where(ta => ta.IsActive))
+                                    {
+                                        <tr>
+                                            <td>@ta.Teacher.User.FullName</td>
+                                            <td>@ta.Subject.Name</td>
+                                            <td>@ta.AcademicYear</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <p class="text-muted">No teachers assigned</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

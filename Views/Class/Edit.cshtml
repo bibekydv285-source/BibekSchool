@@ -1,0 +1,95 @@
+@model BibekSchool.ViewModels.ClassViewModel
+@{
+    ViewData["Title"] = "Edit Class";
+    Layout = "_AdminLayout";
+}
+
+<div class="dashboard">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0">Edit Class</h1>
+            <p class="text-muted">Update class information</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Name" class="form-label">Class Name <span class="text-danger">*</span></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Section" class="form-label">Section</label>
+                        <input asp-for="Section" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ClassTeacherId" class="form-label">Class Teacher</label>
+                        <select asp-for="ClassTeacherId" class="form-select" asp-items="@(new SelectList(Model.Teachers, "Id", "User.FullName", Model.ClassTeacherId))">
+                            <option value="">Select Teacher</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Capacity" class="form-label">Capacity</label>
+                        <input asp-for="Capacity" class="form-control" type="number" min="1" max="100" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="AcademicYear" class="form-label">Academic Year <span class="text-danger">*</span></label>
+                        <input asp-for="AcademicYear" class="form-control" />
+                        <span asp-validation-for="AcademicYear" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input asp-for="IsActive" class="form-check-input" id="isActive" />
+                    <label class="form-check-label" for="isActive">Active</label>
+                </div>
+
+                <hr class="my-3" />
+                <h5 class="mb-3">Assign Subjects</h5>
+
+                <div class="mb-3">
+                    <label class="form-label">Subjects</label>
+                    <div class="form-control" style="max-height: 200px; overflow-y: auto;">
+                        @foreach (var s in Model.Subjects)
+                        {
+                            var isChecked = Model.SelectedSubjectIds.Contains(s.Id);
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="SelectedSubjectIds" value="@s.Id" @(isChecked ? "checked" : "") />
+                                <label class="form-check-label">@s.Name (@s.Code) - @(s.IsCoreSubject ? "Core" : "Optional")</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Update Class
+                    </button>
+                    <a href="@Url.Action("Index", "Class")" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,154 @@
+@model BibekSchool.ViewModels.StudentViewModel
+@{
+    ViewData["Title"] = "Create Student";
+    Layout = "_AdminLayout";
+}
+
+<div class="dashboard">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0">Create Student</h1>
+            <p class="text-muted">Add a new student to the system</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="CreateStudent" method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FullName" class="form-label">Full Name <span class="text-danger">*</span></label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Email" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PhoneNumber" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="DateOfBirth" class="form-label">Date of Birth</label>
+                        <input asp-for="DateOfBirth" class="form-control" type="date" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Gender" class="form-label">Gender</label>
+                        <select asp-for="Gender" class="form-select">
+                            <option value="">Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Address" class="form-label">Address</label>
+                        <input asp-for="Address" class="form-control" />
+                    </div>
+                </div>
+
+                <hr class="my-3" />
+                <h5 class="mb-3">Admission Details</h5>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="AdmissionNumber" class="form-label">Admission Number <span class="text-danger">*</span></label>
+                        <input asp-for="AdmissionNumber" class="form-control" />
+                        <span asp-validation-for="AdmissionNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="AdmissionDate" class="form-label">Admission Date</label>
+                        <input asp-for="AdmissionDate" class="form-control" type="date" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="RollNumber" class="form-label">Roll Number</label>
+                        <input asp-for="RollNumber" class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ClassId" class="form-label">Class</label>
+                        <select asp-for="ClassId" class="form-select">
+                            <option value="">Select Class</option>
+                            @foreach (var c in Model.Classes)
+                            {
+                                <option value="@c.Id">@c.Name @c.Section</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <hr class="my-3" />
+                <h5 class="mb-3">Guardian Information</h5>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FatherName" class="form-label">Father's Name <span class="text-danger">*</span></label>
+                        <input asp-for="FatherName" class="form-control" />
+                        <span asp-validation-for="FatherName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="MotherName" class="form-label">Mother's Name <span class="text-danger">*</span></label>
+                        <input asp-for="MotherName" class="form-control" />
+                        <span asp-validation-for="MotherName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FatherPhone" class="form-label">Father's Phone</label>
+                        <input asp-for="FatherPhone" class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="MotherPhone" class="form-label">Mother's Phone</label>
+                        <input asp-for="MotherPhone" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="GuardianAddress" class="form-label">Guardian Address</label>
+                    <textarea asp-for="GuardianAddress" class="form-control" rows="2"></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="BloodGroup" class="form-label">Blood Group</label>
+                        <input asp-for="BloodGroup" class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="MedicalConditions" class="form-label">Medical Conditions</label>
+                        <input asp-for="MedicalConditions" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input asp-for="IsActive" class="form-check-input" id="isActive" checked />
+                    <label class="form-check-label" for="isActive">Active</label>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Create Student
+                    </button>
+                    <a href="@Url.Action("Students", "Admin")" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
