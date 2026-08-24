@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using System.Data.SqlClient;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,19 +13,20 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-// Configure DbContext with Azure SQL resilience
+// Configure DbContext with MySQL (Pomelo) — reads from config, works locally + Railway env var
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseSqlServer(connectionString, sqlOptions =>
+    // Use MySQL (Pomelo) — reads from config, works locally + Railway env var
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), mySqlOptions =>
     {
-        // Azure SQL transient fault handling
-        sqlOptions.EnableRetryOnFailure(
+        // MySQL transient fault handling (Pomelo)
+        mySqlOptions.EnableRetryOnFailure(
             maxRetryCount: 5,
             maxRetryDelay: TimeSpan.FromSeconds(30),
             errorNumbersToAdd: null);
-        sqlOptions.CommandTimeout(60);
+        mySqlOptions.CommandTimeout(60);
     });
-    
+
     // Only enable sensitive data logging in development
     if (builder.Environment.IsDevelopment())
     {
