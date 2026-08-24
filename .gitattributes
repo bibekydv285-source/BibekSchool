@@ -61,3 +61,16 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+###############################################################################
+# GitHub Linguist language detection overrides
+###############################################################################
+*.cshtml linguist-detectable=false
+*.html linguist-detectable=false
+*.css linguist-detectable=false
+*.js linguist-detectable=false
+*.ps1 linguist-detectable=false
+*.json linguist-detectable=false
+
+wwwroot/* linguist-vendored
+Views/* linguist-documentation
