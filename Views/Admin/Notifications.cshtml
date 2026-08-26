@@ -1,7 +1,7 @@
 @model List<BibekSchool.Models.Notification>
 @{
     ViewData["Title"] = "Notifications";
-    Layout = "_AdminLayout";
+    Layout = "_Layout";
     ViewBag.UnreadNotificationsCount = Model.Count(n => !n.IsRead);
 }
 
@@ -13,7 +13,7 @@
                 <p class="text-muted">View and manage notifications</p>
             </div>
             <div class="btn-group">
-                <button class="btn btn-outline-primary" onclick="markAllRead()">
+                <button class="btn btn-outline-primary" id="btnMarkAllRead">
                     <i class="fas fa-check-double me-2"></i>Mark All Read
                 </button>
             </div>
@@ -92,24 +92,33 @@
 
 @section Scripts {
     <script>
-        function markAllRead() {
-            fetch('@Url.Action("MarkAllAsRead", "Notification")', {
-                method: 'POST',
-                headers: {
-                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                }
-            }).then(() => location.reload());
-        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const markAllReadBtn = document.getElementById('btnMarkAllRead');
+            if (markAllReadBtn) {
+                markAllReadBtn.addEventListener('click', function () {
+                    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                    if (!token) return;
+                    fetch('@Url.Action("MarkAllAsRead", "Notification")', {
+                        method: 'POST',
+                        headers: {
+                            'RequestVerificationToken': token
+                        }
+                    }).then(() => location.reload());
+                });
+            }
 
-        document.querySelectorAll('.mark-read-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const id = this.dataset.id;
-                fetch(`@Url.Action("MarkAsRead", "Notification")/${id}`, {
-                    method: 'POST',
-                    headers: {
-                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                    }
-                }).then(() => location.reload());
+            document.querySelectorAll('.mark-read-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const id = this.dataset.id;
+                    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                    if (!id || !token) return;
+                    fetch(`@Url.Action("MarkAsRead", "Notification")/${id}`, {
+                        method: 'POST',
+                        headers: {
+                            'RequestVerificationToken': token
+                        }
+                    }).then(() => location.reload());
+                });
             });
         });
     </script>

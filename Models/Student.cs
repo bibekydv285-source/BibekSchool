@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BibekSchool.Models
 {
-    public class Student
+    public class Student : ITrackableTimestamps
     {
         [Key]
         public int Id { get; set; }

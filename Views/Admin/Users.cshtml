@@ -3,7 +3,7 @@
 @inject UserManager<BibekSchool.Models.ApplicationUser> UserManager
 @{
     ViewData["Title"] = "Manage Users";
-    Layout = "_AdminLayout";
+    Layout = "_Layout";
 }
 
 <div class="dashboard">
@@ -17,19 +17,19 @@
     <div class="card">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Last Login</th>
-                            <th>Created</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
+<table class="table table-hover table-mobile-stack mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th data-mobile-hide>Phone</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th data-mobile-hide>Last Login</th>
+                                <th data-mobile-hide>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
                     <tbody>
                         @foreach (var user in Model)
                         {

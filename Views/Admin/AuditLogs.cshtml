@@ -1,7 +1,7 @@
 @model List<BibekSchool.Models.AuditLog>
 @{
     ViewData["Title"] = "Audit Logs";
-    Layout = "_AdminLayout";
+    Layout = "_Layout";
 }
 
 <div class="dashboard">
@@ -30,7 +30,7 @@
                         @foreach (var log in Model)
                         {
                             <tr>
-                                <td>@log.User?.FullName ?? "System</td>
+                                <td>@log.User?.FullName ?? "System"</td>
                                 <td><span class="badge bg-primary">@log.Action</span></td>
                                 <td>@log.EntityType</td>
                                 <td>@log.EntityId</td>

@@ -1,6 +1,6 @@
 @{
     ViewData["Title"] = "Settings";
-    Layout = "_AdminLayout";
+    Layout = "_Layout";
 }
 
 <div class="dashboard">
@@ -99,7 +99,12 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">SMTP Password</label>
-                            <input type="password" class="form-control" />
+                            <div class="input-group">
+                                <input type="password" id="SmtpPassword" class="form-control" />
+                                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="SmtpPassword" aria-label="Toggle password visibility">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </form>
@@ -114,13 +119,13 @@
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
-                        <button class="btn btn-outline-primary" onclick="createBackup()">
+                        <button class="btn btn-outline-primary" id="btnCreateBackup">
                             <i class="fas fa-database me-2"></i>Create Database Backup
                         </button>
-                        <button class="btn btn-outline-warning" onclick="clearLogs()">
+                        <button class="btn btn-outline-warning" id="btnClearLogs">
                             <i class="fas fa-broom me-2"></i>Clear Old Audit Logs
                         </button>
-                        <button class="btn btn-outline-info" onclick="optimizeDb()">
+                        <button class="btn btn-outline-info" id="btnOptimizeDb">
                             <i class="fas fa-cogs me-2"></i>Optimize Database
                         </button>
                     </div>
@@ -131,23 +136,5 @@
 </div>
 
 @section Scripts {
-    <script>
-        function createBackup() {
-            if (confirm('Create a database backup? This may take a few minutes.')) {
-                alert('Backup initiated. You will be notified when complete.');
-            }
-        }
-
-        function clearLogs() {
-            if (confirm('Clear audit logs older than 90 days? This cannot be undone.')) {
-                alert('Old logs cleared.');
-            }
-        }
-
-        function optimizeDb() {
-            if (confirm('Run database optimization?')) {
-                alert('Database optimization completed.');
-            }
-        }
-    </script>
+    <!-- Settings functions are now in settings.js (initSettings) -->
 }

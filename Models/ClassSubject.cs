@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BibekSchool.Models
 {
-    public class ClassSubject
+    public class ClassSubject : ITrackableTimestamps
     {
         [Key]
         public int Id { get; set; }
@@ -25,5 +25,8 @@ namespace BibekSchool.Models
 
         [Display(Name = "Created At")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        [Display(Name = "Updated At")]
+        public DateTime? UpdatedAt { get; set; }
     }
 }

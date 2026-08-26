@@ -17,7 +17,7 @@ namespace BibekSchool.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.28")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -163,6 +163,9 @@ namespace BibekSchool.Migrations
                     b.Property<string>("OldValues")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("UserAgent")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -202,6 +205,9 @@ namespace BibekSchool.Migrations
 
                     b.Property<int>("SubjectId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -331,6 +337,9 @@ namespace BibekSchool.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IsRead");
@@ -371,7 +380,11 @@ namespace BibekSchool.Migrations
 
                     b.Property<string>("Token")
                         .IsRequired()
+                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("UsedAt")
                         .HasColumnType("datetime2");

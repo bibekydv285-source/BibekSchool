@@ -137,8 +137,14 @@ namespace BibekSchool.Controllers
                 var teacher = await _teacherService.GetTeacherByUserIdAsync(userId!);
                 if (teacher == null) return NotFound();
 
+                // Get student's class ID from database since Student navigation property may not be loaded
+                var studentClassId = await _context.Students
+                    .Where(s => s.Id == model.StudentId)
+                    .Select(s => s.ClassId)
+                    .FirstOrDefaultAsync();
+
                 var isAssigned = await _teacherService.IsTeacherAssignedToClassSubjectAsync(
-                    teacher.Id, model.Student.ClassId ?? 0, model.SubjectId);
+                    teacher.Id, studentClassId ?? 0, model.SubjectId);
 
                 if (!isAssigned) return Forbid();
 

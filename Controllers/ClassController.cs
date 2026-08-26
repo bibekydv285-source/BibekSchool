@@ -21,7 +21,7 @@ namespace BibekSchool.Controllers
         {
             var classes = await _context.SchoolClasses
                 .Include(c => c.ClassTeacher)
-                .ThenInclude(t => t.User)
+                .ThenInclude(t => t!.User)
                 .Where(c => c.IsActive)
                 .OrderBy(c => c.Name)
                 .ThenBy(c => c.Section)
@@ -186,14 +186,14 @@ namespace BibekSchool.Controllers
         {
             var schoolClass = await _context.SchoolClasses
                 .Include(c => c.ClassTeacher)
-                .ThenInclude(t => t.User)
+                .ThenInclude(t => t!.User)
                 .Include(c => c.ClassSubjects)
                 .ThenInclude(cs => cs.Subject)
                 .Include(c => c.Students)
-                .ThenInclude(s => s.User)
+                .ThenInclude(s => s!.User)
                 .Include(c => c.TeacherAssignments)
                 .ThenInclude(ta => ta.Teacher)
-                .ThenInclude(t => t.User)
+                .ThenInclude(t => t!.User)
                 .Include(c => c.TeacherAssignments)
                 .ThenInclude(ta => ta.Subject)
                 .FirstOrDefaultAsync(c => c.Id == id);

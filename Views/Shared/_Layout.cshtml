@@ -1,42 +1,312 @@
+@{
+    var userName = User.Identity?.Name ?? "User";
+    var userRoles = User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value).ToList();
+    
+    // Fallback: if no role claims, try to get from UserManager (for debugging)
+    // In production, roles should always be in claims via CustomUserClaimsPrincipalFactory
+    var isAdmin = userRoles.Contains("Admin") || userRoles.Contains("MainAdmin");
+    var isTeacher = userRoles.Contains("Teacher");
+    var isStudent = userRoles.Contains("Student");
+
+    // Determine theme and layout config
+    string themeClass = isTeacher ? "theme-teacher" : isStudent ? "theme-student" : "theme-admin";
+    string accentColor = isTeacher ? "success" : isStudent ? "info" : "primary";
+    string roleBadge = isTeacher ? "Teacher" : isStudent ? "Student" : (userRoles.Contains("MainAdmin") ? "MainAdmin" : "Admin");
+    string roleIcon = isTeacher ? "fa-chalkboard-teacher" : isStudent ? "fa-user-graduate" : "fa-school";
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+
+    // Safely handle unread notifications count when controllers/views don't set it.
+    // Prefer ViewBag (controller-set) then HttpContext.Items (middleware-populated), else 0.
+    var unreadNotifications = (ViewBag.UnreadNotificationsCount as int?) ??
+                             (Context.Items["UnreadNotificationsCount"] as int?) ?? 0;
+}
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="@themeClass">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="theme-color" content="#4f6ef7" />
     <title>@ViewData["Title"] - Bibek School</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-    <link href="~/css/site.css" rel="stylesheet" />
-    <link href="~/css/dashboard.css" rel="stylesheet" />
-    <link href="~/css/responsive.css" rel="stylesheet" />
-    <link href="~/css/login.css?v=6" rel="stylesheet" />
-    <link href="~/css/register.css?v=1" rel="stylesheet" />
+    <!-- Core CSS (load order matters: base -> layout -> components -> theme) -->
+    <link href="~/css/base.css" rel="stylesheet" />
+    <link href="~/css/layout.css" rel="stylesheet" />
+    <link href="~/css/components.css" rel="stylesheet" />
+    <link href="~/css/admin-dashboard.css" rel="stylesheet" />
+
+    @if (isAdmin) {
+        <link href="~/css/admin.css" rel="stylesheet" />
+    }
+    else if (isTeacher) {
+        <link href="~/css/teacher.css" rel="stylesheet" />
+    }
+    else if (isStudent) {
+        <link href="~/css/student.css" rel="stylesheet" />
+    }
+    @RenderSection("Styles", required: false)
 </head>
-<body class="@ViewData["BodyClass"]">
+<body class="@themeClass">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <main role="main" class="@(ViewData["NoTopPadding"] as bool? == true ? "" : "pt-5")">
-        @if (TempData["Success"] != null)
-        {
-            <div class="alert alert-success alert-dismissible fade show container mt-3" role="alert">
-                @TempData["Success"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="app-shell">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+            <div class="sidebar-header">
+                <a href="@(isAdmin ? Url.Action("Dashboard", "Admin") : isTeacher ? Url.Action("Dashboard", "Teacher") : Url.Action("Dashboard", "Student"))" class="brand-link">
+                    <i class="fas @roleIcon fa-lg me-2"></i>
+                    <span class="fw-bold">Bibek School</span>
+                    <span class="badge bg-light text-@accentColor ms-2 small">@roleBadge</span>
+                </a>
             </div>
-        }
-        @if (TempData["Error"] != null)
-        {
-            <div class="alert alert-danger alert-dismissible fade show container mt-3" role="alert">
-                @TempData["Error"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
+            <nav class="sidebar-nav">
+                <ul class="nav flex-column">
+                    @if (isAdmin) {
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Dashboard" && currentController == "Admin" ? "active" : "")" href="@Url.Action("Dashboard", "Admin")">
+                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Students" && currentController == "Admin" ? "active" : "")" href="@Url.Action("Students", "Admin")">
+                                <i class="fas fa-user-graduate me-2"></i>Students
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Teachers" && currentController == "Admin" ? "active" : "")" href="@Url.Action("Teachers", "Admin")">
+                                <i class="fas fa-chalkboard-teacher me-2"></i>Teachers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Classes" && currentController == "Class" ? "active" : "")" href="@Url.Action("Classes", "Admin")">
+                                <i class="fas fa-door-open me-2"></i>Classes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Subjects" && currentController == "Subject" ? "active" : "")" href="@Url.Action("Subjects", "Admin")">
+                                <i class="fas fa-book me-2"></i>Subjects
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Index" && currentController == "Mark" ? "active" : "")" href="@Url.Action("Index", "Mark")">
+                                <i class="fas fa-clipboard-check me-2"></i>Marks
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Index" && currentController == "Result" ? "active" : "")" href="@Url.Action("Index", "Result")">
+                                <i class="fas fa-chart-bar me-2"></i>Results
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Users" && currentController == "Admin" ? "active" : "")" href="@Url.Action("Users", "Admin")">
+                                <i class="fas fa-users me-2"></i>Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Notifications" && currentController == "Admin" ? "active" : "")" href="@Url.Action("Notifications", "Admin")">
+                                <i class="fas fa-bell me-2"></i>Notifications
+                                @if (unreadNotifications > 0) {
+                                    <span class="badge bg-danger ms-auto">@unreadNotifications</span>
+                                }
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "AuditLogs" && currentController == "Admin" ? "active" : "")" href="@Url.Action("AuditLogs", "Admin")">
+                                <i class="fas fa-history me-2"></i>Audit Logs
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Settings" && currentController == "Admin" ? "active" : "")" href="@Url.Action("Settings", "Admin")">
+                                <i class="fas fa-cog me-2"></i>Settings
+                            </a>
+                        </li>
+                    }
+                    else if (isTeacher) {
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Dashboard" && currentController == "Teacher" ? "active" : "")" href="@Url.Action("Dashboard", "Teacher")">
+                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Classes" && currentController == "Teacher" ? "active" : "")" href="@Url.Action("Classes", "Teacher")">
+                                <i class="fas fa-door-open me-2"></i>My Classes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Subjects" && currentController == "Teacher" ? "active" : "")" href="@Url.Action("Subjects", "Teacher")">
+                                <i class="fas fa-book me-2"></i>My Subjects
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Marks" && currentController == "Teacher" ? "active" : "")" href="@Url.Action("Marks", "Teacher")">
+                                <i class="fas fa-clipboard-check me-2"></i>Marks
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Results" && currentController == "Teacher" ? "active" : "")" href="@Url.Action("Results", "Teacher")">
+                                <i class="fas fa-chart-bar me-2"></i>Results
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Notifications" && currentController == "Teacher" ? "active" : "")" href="@Url.Action("Notifications", "Teacher")">
+                                <i class="fas fa-bell me-2"></i>Notifications
+                                @if (unreadNotifications > 0) {
+                                    <span class="badge bg-danger ms-auto">@unreadNotifications</span>
+                                }
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Index" && currentController == "Profile" ? "active" : "")" href="@Url.Action("Index", "Profile")">
+                                <i class="fas fa-user me-2"></i>Profile
+                            </a>
+                        </li>
+                    }
+                    else if (isStudent) {
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Dashboard" && currentController == "Student" ? "active" : "")" href="@Url.Action("Dashboard", "Student")">
+                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Profile" && currentController == "Student" ? "active" : "")" href="@Url.Action("Profile", "Student")">
+                                <i class="fas fa-user me-2"></i>My Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Class" && currentController == "Student" ? "active" : "")" href="@Url.Action("Class", "Student")">
+                                <i class="fas fa-door-open me-2"></i>My Class
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Subjects" && currentController == "Student" ? "active" : "")" href="@Url.Action("Subjects", "Student")">
+                                <i class="fas fa-book me-2"></i>My Subjects
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Marks" && currentController == "Student" ? "active" : "")" href="@Url.Action("Marks", "Student")">
+                                <i class="fas fa-clipboard-check me-2"></i>My Marks
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Results" && currentController == "Student" ? "active" : "")" href="@Url.Action("Results", "Student")">
+                                <i class="fas fa-chart-bar me-2"></i>My Results
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Notifications" && currentController == "Student" ? "active" : "")" href="@Url.Action("Notifications", "Student")">
+                                <i class="fas fa-bell me-2"></i>Notifications
+                                @if (unreadNotifications > 0) {
+                                    <span class="badge bg-danger ms-auto">@unreadNotifications</span>
+                                }
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Index" && currentController == "Profile" ? "active" : "")" href="@Url.Action("Index", "Profile")">
+                                <i class="fas fa-cog me-2"></i>Settings
+                            </a>
+                        </li>
+                    }
+                    <li class="nav-item">
+                        <hr class="sidebar-divider" />
+                    </li>
+                    <li class="nav-item">
+                        <form asp-action="Logout" asp-controller="Account" method="post" class="w-100">
+                            <button type="submit" class="nav-link w-100 text-danger d-flex align-items-center justify-content-start px-3 py-2" style="background: none; border: none;">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
 
-        @RenderBody()
-    </main>
+        <!-- Sidebar overlay for mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <!-- Main content area -->
+        <div class="main-content">
+            <!-- Topbar -->
+            <header class="topbar" role="banner">
+                <div class="topbar-inner">
+                    <button class="btn btn-ghost d-lg-none" id="sidebarToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="sidebar">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h4 class="topbar-title mb-0">@ViewData["Title"]</h4>
+                    <!-- Mobile user menu button -->
+                    <div class="mobile-user-menu ms-auto d-lg-none">
+                        <div class="dropdown">
+                            <button class="btn btn-ghost d-flex align-items-center gap-2" data-bs-toggle="dropdown" aria-expanded="false" aria-label="User menu">
+                                <i class="fas fa-user-circle fa-lg"></i>
+                                <span class="badge bg-@accentColor">@roleBadge</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="@Url.Action("Index", "Profile")"><i class="fas fa-user me-2"></i>Profile</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("ChangePassword", "Profile")"><i class="fas fa-key me-2"></i>Change Password</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>
+                                    <form asp-action="Logout" asp-controller="Account" method="post">
+                                        <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="dropdown ms-auto d-none d-lg-flex">
+                        <a class="btn btn-ghost d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="User menu">
+                            <i class="fas fa-user-circle fa-lg"></i>
+                            <span class="d-none d-md-inline">@userName</span>
+                            <span class="badge bg-@accentColor ms-2 d-none d-sm-inline">@roleBadge</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="@Url.Action("Index", "Profile")"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("ChangePassword", "Profile")"><i class="fas fa-key me-2"></i>Change Password</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <form asp-action="Logout" asp-controller="Account" method="post">
+                                    <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="content" id="main-content" role="main">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <!-- Core JS (site.js must load first as it provides global utilities) -->
     <script src="~/js/site.js"></script>
+    <!-- Feature-specific JS (loaded globally for simplicity; pages use init functions) -->
+    <script src="~/js/notifications.js"></script>
+    <script src="~/js/dashboard.js"></script>
+    <script src="~/js/validation.js"></script>
+    <script src="~/js/settings.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

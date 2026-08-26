@@ -1,19 +1,20 @@
 using BibekSchool.Data;
 using BibekSchool.Models;
+using BibekSchool.Services;
 using BibekSchool.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace BibekSchool.Services
 {
-    public class ResultService : IResultService
+    public class ResultService : BaseService, IResultService
     {
-        private readonly ApplicationDbContext _context;
         private readonly IMarkService _markService;
+        private readonly INotificationService _notificationService;
 
-        public ResultService(ApplicationDbContext context, IMarkService markService)
+        public ResultService(ApplicationDbContext context, IMarkService markService, INotificationService notificationService) : base(context)
         {
-            _context = context;
             _markService = markService;
+            _notificationService = notificationService;
         }
 
         public async Task<Result?> GetResultByIdAsync(int id)
@@ -211,11 +212,12 @@ namespace BibekSchool.Services
             await LogAuditAsync(publishedBy, "Publish", "Result", result.Id.ToString(), oldValues,
                 System.Text.Json.JsonSerializer.Serialize(result));
 
-            await CreateNotificationAsync(
-                $"Your {result.Term} result for {result.AcademicYear} has been published.",
+            await _notificationService.CreateNotificationAsync(
                 "Result Published",
+                $"Your {result.Term} result for {result.AcademicYear} has been published.",
                 result.Student.UserId,
                 "Student",
+                false,
                 $"/Student/Results");
 
             return result;
@@ -257,49 +259,20 @@ namespace BibekSchool.Services
 
             if (student?.ClassId == null) return 0;
 
-            var classResults = await _context.Results
-                .Where(r => r.Student.ClassId == student.ClassId && r.AcademicYear == academicYear && r.Term == term)
-                .OrderByDescending(r => r.Percentage)
-                .ToListAsync();
+            // Use SQL COUNT for better performance instead of loading all results
+            var studentResult = await _context.Results
+                .FirstOrDefaultAsync(r => r.StudentId == studentId && r.AcademicYear == academicYear && r.Term == term);
 
-            var rank = classResults.FindIndex(r => r.StudentId == studentId) + 1;
-            return rank > 0 ? rank : 0;
-        }
+            if (studentResult == null) return 0;
 
-        private async Task LogAuditAsync(string userId, string action, string entityType, string entityId, string? oldValues, string? newValues)
-        {
-            var auditLog = new AuditLog
-            {
-                UserId = userId,
-                Action = action,
-                EntityType = entityType,
-                EntityId = entityId,
-                OldValues = oldValues,
-                NewValues = newValues,
-                CreatedAt = DateTime.UtcNow
-            };
+            var rank = await _context.Results
+                .Where(r => r.Student.ClassId == student.ClassId 
+                    && r.AcademicYear == academicYear 
+                    && r.Term == term 
+                    && r.Percentage > studentResult.Percentage)
+                .CountAsync();
 
-            _context.AuditLogs.Add(auditLog);
-            await _context.SaveChangesAsync();
-        }
-
-        private async Task CreateNotificationAsync(string message, string title, string targetUserId, string targetRole, string referenceLink)
-        {
-            var notification = new Notification
-            {
-                Title = title,
-                Message = message,
-                Type = "Info",
-                TargetUserId = targetUserId,
-                TargetRole = targetRole,
-                IsGlobal = false,
-                ReferenceLink = referenceLink,
-                CreatedAt = DateTime.UtcNow,
-                CreatedBy = "System"
-            };
-
-            _context.Notifications.Add(notification);
-            await _context.SaveChangesAsync();
+            return rank + 1;
         }
     }
 }

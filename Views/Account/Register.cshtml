@@ -1,156 +1,160 @@
 @model BibekSchool.ViewModels.RegisterStudentViewModel
 @{
     ViewData["Title"] = "Student Registration";
-    Layout = "_Layout";
+    Layout = "_AuthLayout";
 }
 
-<div class="register-page">
-    <div class="register-container">
-        <div class="register-card">
-            <div class="register-header">
-                <div class="logo">
-                    <i class="fas fa-user-graduate"></i>
-                </div>
-                <h2 class="fw-bold">Student Registration</h2>
-                <p>Create your student account</p>
+<div class="auth-card">
+    <div class="auth-header">
+        <div class="logo">
+            <i class="fas fa-user-graduate"></i>
+        </div>
+        <h2 class="fw-bold">Student Registration</h2>
+        <p>Create your student account</p>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <form asp-action="Register" method="post">
+
+        <div class="register-section-title">
+            <i class="fas fa-id-card"></i> Student Information
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="FullName" class="form-label">Full Name <span class="text-danger small-star">*</span></label>
+                <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
             </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="Email" class="form-label">Email <span class="text-danger small-star">*</span></label>
+                <input asp-for="Email" class="form-control" placeholder="Enter email" autocomplete="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
 
-            <form asp-action="Register" method="post">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="PhoneNumber" class="form-label">Phone Number <span class="text-danger small-star">*</span></label>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="Enter phone number" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="DateOfBirth" class="form-label">Date of Birth <span class="text-danger small-star">*</span></label>
+                <input asp-for="DateOfBirth" class="form-control" type="date" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+        </div>
 
-                <div class="register-section-title">
-                    <i class="fas fa-id-card"></i> Student Information
-                </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Gender" class="form-label">Gender <span class="text-danger small-star">*</span></label>
+                <select asp-for="Gender" class="form-select">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="Address" class="form-label">Address</label>
+                <input asp-for="Address" class="form-control" placeholder="Enter address" />
+            </div>
+        </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="FullName" class="form-label">Full Name <span class="text-danger small-star">*</span></label>
-                        <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
-                        <span asp-validation-for="FullName" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="Email" class="form-label">Email <span class="text-danger small-star">*</span></label>
-                        <input asp-for="Email" class="form-control" placeholder="Enter email" autocomplete="email" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                </div>
+        <div class="register-section-title">
+            <i class="fas fa-users"></i> Guardian Information
+        </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="PhoneNumber" class="form-label">Phone Number <span class="text-danger small-star">*</span></label>
-                        <input asp-for="PhoneNumber" class="form-control" placeholder="Enter phone number" />
-                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="DateOfBirth" class="form-label">Date of Birth <span class="text-danger small-star">*</span></label>
-                        <input asp-for="DateOfBirth" class="form-control" type="date" />
-                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="FatherName" class="form-label">Father's Name <span class="text-danger small-star">*</span></label>
+                <input asp-for="FatherName" class="form-control" placeholder="Father's full name" />
+                <span asp-validation-for="FatherName" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="MotherName" class="form-label">Mother's Name <span class="text-danger small-star">*</span></label>
+                <input asp-for="MotherName" class="form-control" placeholder="Mother's full name" />
+                <span asp-validation-for="MotherName" class="text-danger"></span>
+            </div>
+        </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="Gender" class="form-label">Gender <span class="text-danger small-star">*</span></label>
-                        <select asp-for="Gender" class="form-select">
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                        </select>
-                        <span asp-validation-for="Gender" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="Address" class="form-label">Address</label>
-                        <input asp-for="Address" class="form-control" placeholder="Enter address" />
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="FatherPhone" class="form-label">Father's Phone</label>
+                <input asp-for="FatherPhone" class="form-control" placeholder="Father's phone number" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="MotherPhone" class="form-label">Mother's Phone</label>
+                <input asp-for="MotherPhone" class="form-control" placeholder="Mother's phone number" />
+            </div>
+        </div>
 
-                <div class="register-section-title">
-                    <i class="fas fa-users"></i> Guardian Information
-                </div>
+        <div class="mb-3">
+            <label asp-for="GuardianAddress" class="form-label">Guardian Address</label>
+            <textarea asp-for="GuardianAddress" class="form-control" rows="2" placeholder="Guardian's address"></textarea>
+        </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="FatherName" class="form-label">Father's Name <span class="text-danger small-star">*</span></label>
-                        <input asp-for="FatherName" class="form-control" placeholder="Father's full name" />
-                        <span asp-validation-for="FatherName" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="MotherName" class="form-label">Mother's Name <span class="text-danger small-star">*</span></label>
-                        <input asp-for="MotherName" class="form-control" placeholder="Mother's full name" />
-                        <span asp-validation-for="MotherName" class="text-danger"></span>
-                    </div>
-                </div>
+        <div class="register-section-title">
+            <i class="fas fa-notes-medical"></i> Medical Information
+        </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="FatherPhone" class="form-label">Father's Phone</label>
-                        <input asp-for="FatherPhone" class="form-control" placeholder="Father's phone number" />
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="MotherPhone" class="form-label">Mother's Phone</label>
-                        <input asp-for="MotherPhone" class="form-control" placeholder="Mother's phone number" />
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="BloodGroup" class="form-label">Blood Group</label>
+                <input asp-for="BloodGroup" class="form-control" placeholder="e.g., A+, B-, O+" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="MedicalConditions" class="form-label">Medical Conditions (if any)</label>
+                <input asp-for="MedicalConditions" class="form-control" placeholder="Any medical conditions" />
+            </div>
+        </div>
 
-                <div class="mb-3">
-                    <label asp-for="GuardianAddress" class="form-label">Guardian Address</label>
-                    <textarea asp-for="GuardianAddress" class="form-control" rows="2" placeholder="Guardian's address"></textarea>
-                </div>
+        <div class="register-section-title credentials">
+            <i class="fas fa-lock"></i> Account Credentials
+        </div>
 
-                <div class="register-section-title">
-                    <i class="fas fa-notes-medical"></i> Medical Information
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="BloodGroup" class="form-label">Blood Group</label>
-                        <input asp-for="BloodGroup" class="form-control" placeholder="e.g., A+, B-, O+" />
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="MedicalConditions" class="form-label">Medical Conditions (if any)</label>
-                        <input asp-for="MedicalConditions" class="form-control" placeholder="Any medical conditions" />
-                    </div>
-                </div>
-
-                <div class="register-section-title credentials">
-                    <i class="fas fa-lock"></i> Account Credentials
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="Password" class="form-label">Password <span class="text-danger small-star">*</span></label>
-                        <div class="input-group">
-                            <input asp-for="Password" id="Password" class="form-control" placeholder="Create password" autocomplete="new-password" />
-                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="Password" aria-label="Toggle password visibility">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="ConfirmPassword" class="form-label">Confirm Password <span class="text-danger small-star">*</span></label>
-                        <div class="input-group">
-                            <input asp-for="ConfirmPassword" id="ConfirmPassword" class="form-control" placeholder="Confirm password" autocomplete="new-password" />
-                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="ConfirmPassword" aria-label="Toggle password visibility">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="d-grid mt-4">
-                    <button type="submit" class="btn btn-success btn-lg">
-                        <i class="fas fa-user-plus me-2"></i>Register
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Password" class="form-label">Password <span class="text-danger small-star">*</span></label>
+                <div class="input-group">
+                    <input asp-for="Password" id="Password" class="form-control" placeholder="Create password" autocomplete="new-password" />
+                    <button class="btn btn-outline-secondary toggle-password" type="button" data-target="Password" aria-label="Toggle password visibility">
+                        <i class="fas fa-eye"></i>
                     </button>
                 </div>
-
-                <div class="text-center mt-3">
-                    <p class="mb-0">Already have an account? <a href="@Url.Action("Login", "Account")" class="text-decoration-none">Login</a></p>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="ConfirmPassword" class="form-label">Confirm Password <span class="text-danger small-star">*</span></label>
+                <div class="input-group">
+                    <input asp-for="ConfirmPassword" id="ConfirmPassword" class="form-control" placeholder="Confirm password" autocomplete="new-password" />
+                    <button class="btn btn-outline-secondary toggle-password" type="button" data-target="ConfirmPassword" aria-label="Toggle password visibility">
+                        <i class="fas fa-eye"></i>
+                    </button>
                 </div>
-            </form>
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
         </div>
-    </div>
+
+        <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="fas fa-user-plus me-2"></i>Register
+            </button>
+        </div>
+
+        <div class="text-center mt-3">
+            <p class="mb-0">Already have an account? <a href="@Url.Action("Login", "Account")" class="text-decoration-none">Login</a></p>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

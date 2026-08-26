@@ -1,7 +1,7 @@
 @model List<BibekSchool.Models.Subject>
 @{
     ViewData["Title"] = "Subjects";
-    Layout = "_AdminLayout";
+    Layout = "_Layout";
 }
 
 <div class="dashboard">
@@ -20,15 +20,15 @@
     <div class="card">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
+                <table class="table table-hover table-mobile-stack mb-0">
                     <thead class="table-light">
                         <tr>
                             <th>Code</th>
                             <th>Name</th>
-                            <th>Type</th>
-                            <th>Full Marks</th>
-                            <th>Pass Marks</th>
-                            <th>Classes</th>
+                            <th data-mobile-hide>Type</th>
+                            <th data-mobile-hide>Full Marks</th>
+                            <th data-mobile-hide>Pass Marks</th>
+                            <th data-mobile-hide>Classes</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>

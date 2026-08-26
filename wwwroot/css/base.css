@@ -1,0 +1,383 @@
+/* ==========================================================================
+   BASE.CSS — Core design tokens, resets, typography, accessibility
+   Used by: All pages (loaded in both _Layout.cshtml and _AuthLayout.cshtml)
+   ========================================================================== */
+
+/* ==========================================================================
+   1. DESIGN TOKENS
+   ========================================================================== */
+
+:root {
+    /* Brand */
+    --bs-primary: #4f6ef7;
+    --bs-primary-dark: #3d5ae0;
+    --bs-primary-light: #dbeafe;
+    --bs-primary-rgb: 79, 110, 247;
+    /* Role accents */
+    --accent-admin: #4f6ef7;
+    --accent-teacher: #10b981;
+    --accent-student: #06b6d4;
+    /* Semantic */
+    --bs-success: #10b981;
+    --bs-success-light: #d1fae5;
+    --bs-warning: #f59e0b;
+    --bs-warning-light: #fef3c7;
+    --bs-danger: #ef4444;
+    --bs-danger-light: #fee2e2;
+    --bs-info: #06b6d4;
+    --bs-info-light: #cffafe;
+    /* Light colors */
+    --color-bg-primary: #f3f4f6;
+    --color-bg-secondary: #ffffff;
+    --color-bg-tertiary: #f9fafb;
+    --color-bg-card: #ffffff;
+    --color-border: #e5e7eb;
+    --color-text-primary: #111827;
+    --color-text-secondary: #6b7280;
+    --color-text-muted: #9ca3af;
+    /* Dark colors */
+    --color-dark-bg-primary: #0f172a;
+    --color-dark-bg-secondary: #1e293b;
+    --color-dark-bg-tertiary: #334155;
+    --color-dark-bg-card: #1e293b;
+    --color-dark-border: #334155;
+    --color-dark-text-primary: #f1f5f9;
+    --color-dark-text-secondary: #94a3b8;
+    --color-dark-text-muted: #64748b;
+    /* Layout */
+    --sidebar-width: 260px;
+    --sidebar-collapsed-width: 72px;
+    --topbar-height: 64px;
+    /* Spacing */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    /* Radius */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    /* Typography */
+    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+    /* Transition */
+    --transition-fast: 0.15s ease;
+    --transition: 0.25s ease;
+    --transition-slow: 0.35s ease;
+    /* Z-index */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+}
+
+
+/* ==========================================================================
+   2. RESET
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--text-primary, var(--color-text-primary));
+    background: var(--content-bg, var(--color-bg-primary));
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+
+/* ==========================================================================
+   3. ACCESSIBILITY
+   ========================================================================== */
+
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.75rem 1.25rem;
+    background: var(--accent);
+    color: #ffffff;
+    border-radius: var(--radius-md);
+    z-index: var(--z-tooltip);
+    text-decoration: none;
+    font-weight: 600;
+    transition: top var(--transition);
+}
+
+.skip-link:focus {
+    top: 1rem;
+}
+
+:focus-visible {
+    outline: 3px solid var(--accent, #4f6ef7);
+    outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+
+/* ==========================================================================
+   4. IMAGES / MEDIA
+   ========================================================================== */
+
+img,
+svg,
+video,
+iframe {
+    max-width: 100%;
+}
+
+img {
+    height: auto;
+    vertical-align: middle;
+}
+
+iframe {
+    border: 0;
+}
+
+
+/* ==========================================================================
+   5. TYPOGRAPHY
+   ========================================================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-top: 0;
+    margin-bottom: var(--space-3);
+    color: var(--text-primary);
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+h1 {
+    font-size: 2.25rem;
+}
+
+h2 {
+    font-size: 1.875rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+h4 {
+    font-size: 1.25rem;
+}
+
+h5 {
+    font-size: 1.125rem;
+}
+
+h6 {
+    font-size: 1rem;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: var(--space-4);
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.text-primary {
+    color: var(--accent) !important;
+}
+
+.text-success {
+    color: var(--bs-success) !important;
+}
+
+.text-warning {
+    color: var(--bs-warning) !important;
+}
+
+.text-danger {
+    color: var(--bs-danger) !important;
+}
+
+.text-info {
+    color: var(--bs-info) !important;
+}
+
+.fw-normal {
+    font-weight: 400 !important;
+}
+
+.fw-medium {
+    font-weight: 500 !important;
+}
+
+.fw-semibold {
+    font-weight: 600 !important;
+}
+
+.fw-bold {
+    font-weight: 700 !important;
+}
+
+.small,
+small {
+    font-size: 0.875rem;
+}
+
+
+/* ==========================================================================
+   6. ANIMATIONS
+   ========================================================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease both;
+}
+
+.slide-up {
+    animation: slideUp 0.4s ease both;
+}
+
+.loading {
+    position: relative;
+    pointer-events: none;
+    color: transparent !important;
+}
+
+.loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1rem;
+    height: 1rem;
+    margin: -0.5rem;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+}
+
+
+/* ==========================================================================
+   7. SCROLLBARS
+   ========================================================================== */
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--input-border, #cbd5e1) var(--content-bg, #f3f4f6);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--content-bg, #f3f4f6);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--input-border, #cbd5e1);
+    border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted, #9ca3af);
+}

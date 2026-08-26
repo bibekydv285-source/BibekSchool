@@ -81,8 +81,8 @@ namespace BibekSchool.Controllers
                             TotalStudentsInClass = r.TotalStudentsInClass,
                             IsPassed = r.IsPassed,
                             PublishedDate = r.PublishedDate,
-                            StudentName = r.Student.User.FullName,
-                            ClassName = r.Student.Class.Name
+                            StudentName = r.Student!.User!.FullName,
+                            ClassName = r.Student.Class!.Name
                         })
                         .ToListAsync();
                 }
@@ -116,8 +116,8 @@ namespace BibekSchool.Controllers
                         TotalStudentsInClass = r.TotalStudentsInClass,
                         IsPassed = r.IsPassed,
                         PublishedDate = r.PublishedDate,
-                        StudentName = r.Student.User.FullName,
-                        ClassName = r.Student.Class.Name
+                        StudentName = r.Student!.User!.FullName,
+                        ClassName = r.Student.Class!.Name
                     })
                     .ToListAsync();
             }

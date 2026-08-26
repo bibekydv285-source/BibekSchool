@@ -1,7 +1,7 @@
 @model BibekSchool.ViewModels.MarkViewModel
 @{
     ViewData["Title"] = "Add Mark";
-    Layout = "_TeacherLayout";
+    Layout = "_Layout";
 }
 
 <div class="dashboard">
@@ -104,66 +104,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const subjectSelect = document.querySelector('[name="SubjectId"]');
-            const fullMarksInput = document.querySelector('[name="FullMarks"]');
-            const passMarksInput = document.querySelector('[name="PassMarks"]');
-            const obtainedMarksInput = document.getElementById('obtainedMarksInput');
-            const gradeDisplay = document.getElementById('gradeDisplay');
-            const percentageDisplay = document.getElementById('percentageDisplay');
-
-            function calculateGrade() {
-                const obtained = parseFloat(obtainedMarksInput?.value) || 0;
-                const full = parseFloat(fullMarksInput?.value) || 100;
-                const pass = parseFloat(passMarksInput?.value) || 40;
-
-                if (full > 0) {
-                    const percentage = (obtained / full) * 100;
-                    let grade;
-
-                    if (obtained < pass) grade = 'F';
-                    else if (percentage >= 90) grade = 'A+';
-                    else if (percentage >= 80) grade = 'A';
-                    else if (percentage >= 70) grade = 'B+';
-                    else if (percentage >= 60) grade = 'B';
-                    else if (percentage >= 50) grade = 'C+';
-                    else if (percentage >= 40) grade = 'C';
-                    else grade = 'D';
-
-                    if (gradeDisplay) gradeDisplay.textContent = grade;
-                    if (percentageDisplay) percentageDisplay.textContent = percentage.toFixed(2) + '%';
-
-                    if (gradeDisplay) {
-                        gradeDisplay.className = 'badge fs-6 ' + (obtained >= pass ? 'bg-success' : 'bg-danger');
-                    }
-                }
-            }
-
-            // Load subject details when subject changes
-            if (subjectSelect) {
-                subjectSelect.addEventListener('change', function () {
-                    const selectedOption = this.options[this.selectedIndex];
-                    const fullMarks = selectedOption.getAttribute('data-full-marks');
-                    const passMarks = selectedOption.getAttribute('data-pass-marks');
-
-                    if (fullMarks) fullMarksInput.value = fullMarks;
-                    if (passMarks) passMarksInput.value = passMarks;
-                    calculateGrade();
-                });
-            }
-
-            if (obtainedMarksInput) obtainedMarksInput.addEventListener('input', calculateGrade);
-            if (fullMarksInput) fullMarksInput.addEventListener('input', calculateGrade);
-            if (passMarksInput) passMarksInput.addEventListener('input', calculateGrade);
-
-            // Initial calculation
-            calculateGrade();
-
-            // Trigger subject change if already selected (for pre-filled forms)
-            if (subjectSelect && subjectSelect.value) {
-                subjectSelect.dispatchEvent(new Event('change'));
-            }
-        });
-    </script>
+    <!-- Grade calculator is now in dashboard.js (initGradeCalculator) -->
 }

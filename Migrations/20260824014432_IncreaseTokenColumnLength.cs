@@ -13,7 +13,8 @@ namespace BibekSchool.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Token",
                 table: "PasswordResetTokens",
-                type: "nvarchar(max)",
+                type: "nvarchar(450)",
+                maxLength: 450,
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(100)",
@@ -30,7 +31,8 @@ namespace BibekSchool.Migrations
                 maxLength: 100,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+                oldType: "nvarchar(450)",
+                oldMaxLength: 450);
         }
     }
 }

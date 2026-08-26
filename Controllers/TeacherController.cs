@@ -15,23 +15,33 @@ namespace BibekSchool.Controllers
         private readonly IMarkService _markService;
         private readonly INotificationService _notificationService;
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<TeacherController> _logger;
 
         public TeacherController(
             ITeacherService teacherService,
             IMarkService markService,
             INotificationService notificationService,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            ILogger<TeacherController> logger)
         {
             _teacherService = teacherService;
             _markService = markService;
             _notificationService = notificationService;
             _context = context;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Dashboard()
         {
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userId)) return RedirectToAction("Login", "Account");
+
+            var teacher = await _teacherService.GetTeacherByUserIdAsync(userId);
+            if (teacher == null)
+            {
+                // User has Teacher role but no Teacher profile - redirect to AccessDenied
+                return RedirectToAction("AccessDenied", "Account");
+            }
 
             var model = await _teacherService.GetTeacherDashboardAsync(userId);
             return View(model);
@@ -196,7 +206,7 @@ namespace BibekSchool.Controllers
             if (teacher == null) return NotFound();
 
             var isAssigned = await _teacherService.IsTeacherAssignedToClassSubjectAsync(
-                teacher.Id, model.Student.ClassId ?? 0, model.SubjectId);
+                teacher.Id, model.Student?.ClassId ?? 0, model.SubjectId);
 
             if (!isAssigned) return Forbid();
 
@@ -342,7 +352,7 @@ namespace BibekSchool.Controllers
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            await _notificationService.MarkAsReadAsync(id, userId);
+            await _notificationService.MarkAsReadAsync(id, userId, "Teacher");
             return Ok();
         }
     }

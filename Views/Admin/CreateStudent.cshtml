@@ -1,7 +1,7 @@
 @model BibekSchool.ViewModels.StudentViewModel
 @{
     ViewData["Title"] = "Create Student";
-    Layout = "_AdminLayout";
+    Layout = "_Layout";
 }
 
 <div class="dashboard">
@@ -14,6 +14,14 @@
 
     <div class="card">
         <div class="card-body">
+            @if (ViewBag.SuccessMessage != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @ViewBag.SuccessMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
             <form asp-action="CreateStudent" method="post">
                 <div class="row">
                     <div class="col-md-6 mb-3">

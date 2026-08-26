@@ -1,0 +1,663 @@
+﻿/* ==========================================================================
+   ADMIN DASHBOARD
+   Professional Modern School Management Dashboard
+   ========================================================================== */
+
+
+/* ==========================================================================
+   COLOR VARIABLES
+   ========================================================================== */
+
+.theme-admin {
+    --admin-primary: #2563eb;
+    --admin-primary-hover: #1d4ed8;
+    --admin-primary-light: #eff6ff;
+    --admin-success: #10b981;
+    --admin-success-hover: #059669;
+    --admin-success-light: #ecfdf5;
+    --admin-info: #06b6d4;
+    --admin-info-hover: #0891b2;
+    --admin-info-light: #ecfeff;
+    --admin-warning: #f59e0b;
+    --admin-warning-hover: #d97706;
+    --admin-warning-light: #fffbeb;
+    --admin-danger: #ef4444;
+    --admin-danger-hover: #dc2626;
+    --admin-danger-light: #fef2f2;
+    --admin-secondary: #64748b;
+    --admin-bg: #f8fafc;
+    --admin-card-bg: #ffffff;
+    --admin-text: #1e293b;
+    --admin-muted: #64748b;
+    --admin-border: #e2e8f0;
+    --admin-radius: 16px;
+    --admin-shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+    --admin-shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+    --admin-shadow-lg: 0 18px 45px rgba(15, 23, 42, 0.12);
+    --admin-transition: all 0.25s ease;
+}
+
+
+    /* ==========================================================================
+   MAIN DASHBOARD
+   ========================================================================== */
+
+    .theme-admin.admin-dashboard {
+        min-height: 100%;
+        color: var(--admin-text);
+    }
+
+
+    /* ==========================================================================
+   PAGE HEADER
+   ========================================================================== */
+
+    .theme-admin .dashboard-page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+
+    .theme-admin h1.h3 {
+        color: var(--admin-text);
+        font-size: 1.75rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+
+
+    .theme-admin .text-muted {
+        color: var(--admin-muted) !important;
+    }
+
+
+    .theme-admin .dashboard-page-header strong {
+        color: var(--admin-primary);
+    }
+
+
+    /* ==========================================================================
+   ALERT
+   ========================================================================== */
+
+    .theme-admin .admin-alert {
+        display: flex;
+        align-items: center;
+        border: none;
+        border-left: 4px solid var(--admin-danger);
+        background: var(--admin-danger-light);
+        color: var(--admin-danger-hover);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        box-shadow: var(--admin-shadow-sm);
+    }
+
+
+    /* ==========================================================================
+   MAIN CARDS
+   ========================================================================== */
+
+    .theme-admin .dashboard-card,
+    .theme-admin .stat-card {
+        background: var(--admin-card-bg);
+        border-radius: var(--admin-radius);
+        overflow: hidden;
+        box-shadow: var(--admin-shadow-sm);
+        transition: var(--admin-transition);
+    }
+
+
+        /* ==========================================================================
+   DASHBOARD CARD HOVER
+   ========================================================================== */
+
+        .theme-admin .dashboard-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--admin-shadow-md);
+        }
+
+
+    /* ==========================================================================
+   STAT CARDS
+   ========================================================================== */
+
+    .theme-admin .stat-card {
+        position: relative;
+        border: 1px solid var(--admin-border) !important;
+    }
+
+
+        /* TOP COLOR LINE */
+
+        .theme-admin .stat-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--admin-primary);
+            transition: var(--admin-transition);
+        }
+
+
+        /* STAT CARD HOVER */
+
+        .theme-admin .stat-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--admin-shadow-lg);
+        }
+
+
+            .theme-admin .stat-card:hover::before {
+                height: 6px;
+            }
+
+
+        /* CARD BODY */
+
+        .theme-admin .stat-card .card-body {
+            padding: 1.5rem;
+        }
+
+
+        /* STAT TITLE */
+
+        .theme-admin .stat-card h6 {
+            color: var(--admin-muted) !important;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.7px;
+        }
+
+
+        /* STAT NUMBER */
+
+        .theme-admin .stat-card h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+
+    /* ==========================================================================
+   STAT ICON
+   ========================================================================== */
+
+    .theme-admin .stat-icon {
+        width: 58px;
+        height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        transition: var(--admin-transition);
+    }
+
+
+    .theme-admin .stat-card:hover .stat-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+
+    /* ==========================================================================
+   LIGHT ICON BACKGROUNDS
+   ========================================================================== */
+
+    .theme-admin .bg-primary-light {
+        background: var(--admin-primary-light);
+    }
+
+
+    .theme-admin .bg-success-light {
+        background: var(--admin-success-light);
+    }
+
+
+    .theme-admin .bg-info-light {
+        background: var(--admin-info-light);
+    }
+
+
+    .theme-admin .bg-warning-light {
+        background: var(--admin-warning-light);
+    }
+
+
+    /* ==========================================================================
+   STAT CARD COLORS
+   ========================================================================== */
+
+    .theme-admin .stat-card.border-primary::before {
+        background: var(--admin-primary);
+    }
+
+
+    .theme-admin .stat-card.border-success::before {
+        background: var(--admin-success);
+    }
+
+
+    .theme-admin .stat-card.border-info::before {
+        background: var(--admin-info);
+    }
+
+
+    .theme-admin .stat-card.border-warning::before {
+        background: var(--admin-warning);
+    }
+
+
+    /* ==========================================================================
+   CARD HEADER
+   ========================================================================== */
+
+    .theme-admin .dashboard-card .card-header {
+        background: #ffffff;
+        border-bottom: 1px solid var(--admin-border);
+        padding: 1rem 1.25rem;
+        min-height: 68px;
+        display: flex;
+        align-items: center;
+    }
+
+
+    /* ==========================================================================
+   CARD TITLE
+   ========================================================================== */
+
+    .theme-admin .dashboard-card-title {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+    }
+
+
+        .theme-admin .dashboard-card-title i {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--admin-primary);
+            background: var(--admin-primary-light);
+            border-radius: 10px;
+        }
+
+
+    .theme-admin .dashboard-card .card-header h5 {
+        color: var(--admin-text);
+        font-size: 1rem;
+        font-weight: 750;
+    }
+
+
+    /* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+    .theme-admin .btn-outline-primary {
+        color: var(--admin-primary);
+        border-color: rgba(37, 99, 235, 0.35);
+        background: transparent;
+        font-weight: 600;
+        border-radius: 9px;
+        padding: 0.42rem 0.8rem;
+        transition: var(--admin-transition);
+    }
+
+
+        /* BUTTON HOVER */
+
+        .theme-admin .btn-outline-primary:hover {
+            background: var(--admin-primary);
+            border-color: var(--admin-primary);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+        }
+
+
+        .theme-admin .btn-outline-primary:active {
+            transform: translateY(0);
+        }
+
+
+    /* ==========================================================================
+   TABLE
+   ========================================================================== */
+
+    .theme-admin .table {
+        margin-bottom: 0;
+    }
+
+
+        .theme-admin .table thead th {
+            background: #f8fafc;
+            color: var(--admin-muted);
+            border-bottom: 1px solid var(--admin-border);
+            font-size: 0.7rem;
+            font-weight: 750;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            white-space: nowrap;
+            padding: 1rem 1.25rem;
+        }
+
+
+        /* TABLE BODY */
+
+        .theme-admin .table tbody td {
+            color: var(--admin-text);
+            border-color: #f1f5f9;
+            padding: 1rem 1.25rem;
+            vertical-align: middle;
+        }
+
+
+    /* TABLE ROW */
+
+    .theme-admin .table-hover tbody tr {
+        transition: var(--admin-transition);
+    }
+
+
+        /* TABLE HOVER */
+
+        .theme-admin .table-hover tbody tr:hover {
+            background: #f8fbff;
+            box-shadow: inset 4px 0 0 var(--admin-primary);
+        }
+
+
+    /* ==========================================================================
+   USER NAME CELL
+   ========================================================================== */
+
+    .theme-admin .user-name-cell {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        font-weight: 600;
+    }
+
+
+    /* USER AVATAR */
+
+    .theme-admin .user-avatar {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient( 135deg, var(--admin-primary), #60a5fa );
+        color: #ffffff;
+        font-size: 0.8rem;
+        font-weight: 800;
+        border-radius: 50%;
+        transition: var(--admin-transition);
+    }
+
+
+    .theme-admin tr:hover .user-avatar {
+        transform: scale(1.08);
+    }
+
+
+    /* ==========================================================================
+   BADGES
+   ========================================================================== */
+
+    .theme-admin .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.42rem 0.7rem;
+        border-radius: 8px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        transition: var(--admin-transition);
+    }
+
+
+        .theme-admin .badge:hover {
+            transform: translateY(-1px);
+        }
+
+
+    /* ==========================================================================
+   LIST GROUP
+   ========================================================================== */
+
+    .theme-admin .list-group-item {
+        background: transparent;
+        border-color: #f1f5f9;
+        padding: 1rem 1.25rem;
+        transition: var(--admin-transition);
+    }
+
+
+        /* LIST ITEM HOVER */
+
+        .theme-admin .list-group-item:hover {
+            background: #f8fbff;
+            padding-left: 1.5rem;
+            box-shadow: inset 4px 0 0 var(--admin-primary);
+        }
+
+
+        .theme-admin .list-group-item h6 {
+            color: var(--admin-text);
+            font-weight: 700;
+            transition: var(--admin-transition);
+        }
+
+
+        .theme-admin .list-group-item:hover h6 {
+            color: var(--admin-primary);
+        }
+
+
+    /* ==========================================================================
+   EMPTY STATE
+   ========================================================================== */
+
+    .theme-admin .empty-state {
+        text-align: center;
+        color: var(--admin-muted);
+        padding: 2rem;
+    }
+
+
+        .theme-admin .empty-state i {
+            display: block;
+            font-size: 2rem;
+            color: #cbd5e1;
+            margin-bottom: 0.75rem;
+        }
+
+
+        .theme-admin .empty-state p {
+            font-size: 0.9rem;
+        }
+
+
+    /* ==========================================================================
+   SCROLLBAR
+   ========================================================================== */
+
+    .theme-admin .table-responsive::-webkit-scrollbar {
+        height: 6px;
+    }
+
+
+    .theme-admin .table-responsive::-webkit-scrollbar-track {
+        background: #f1f5f9;
+    }
+
+
+    .theme-admin .table-responsive::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+
+
+        .theme-admin .table-responsive::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+
+/* ==========================================================================
+   RESPONSIVE TABLET
+   ========================================================================== */
+
+@media (max-width: 991.98px) {
+
+    .theme-admin .dashboard-card {
+        margin-bottom: 0.5rem;
+    }
+
+
+        .theme-admin .dashboard-card:hover {
+            transform: translateY(-3px);
+        }
+}
+
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 767.98px) {
+
+    .theme-admin .dashboard-page-header {
+        display: block;
+    }
+
+
+    .theme-admin h1.h3 {
+        font-size: 1.5rem;
+    }
+
+
+    .theme-admin .stat-card .card-body {
+        padding: 1.15rem;
+    }
+
+
+    .theme-admin .stat-card h2 {
+        font-size: 1.7rem;
+    }
+
+
+    .theme-admin .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+    }
+
+
+        .theme-admin .stat-icon i {
+            font-size: 1.4rem !important;
+        }
+
+
+    .theme-admin .dashboard-card .card-header {
+        padding: 0.9rem 1rem;
+        min-height: 62px;
+    }
+
+
+    .theme-admin .dashboard-card-title {
+        gap: 0.5rem;
+    }
+
+
+        .theme-admin .dashboard-card-title i {
+            width: 32px;
+            height: 32px;
+        }
+
+
+    .theme-admin .dashboard-card .card-header h5 {
+        font-size: 0.9rem;
+    }
+
+
+    .theme-admin .table thead th,
+    .theme-admin .table tbody td {
+        padding: 0.85rem 0.9rem;
+    }
+
+
+    .theme-admin [data-mobile-hide] {
+        display: none;
+    }
+
+
+    .theme-admin .list-group-item {
+        padding: 0.9rem 1rem;
+    }
+
+
+    .theme-admin .btn-outline-primary {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.65rem;
+    }
+}
+
+
+/* ==========================================================================
+   SMALL MOBILE
+   ========================================================================== */
+
+@media (max-width: 480px) {
+
+    .theme-admin h1.h3 {
+        font-size: 1.35rem;
+    }
+
+
+    .theme-admin .stat-card h6 {
+        font-size: 0.63rem;
+    }
+
+
+    .theme-admin .stat-card h2 {
+        font-size: 1.45rem;
+    }
+
+
+    .theme-admin .stat-icon {
+        width: 46px;
+        height: 46px;
+    }
+
+
+    .theme-admin .dashboard-card-title i {
+        display: none;
+    }
+
+
+    .theme-admin .user-avatar {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+
+/* ==========================================================================
+   ACCESSIBILITY
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .theme-admin *,
+    .theme-admin *::before,
+    .theme-admin *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}

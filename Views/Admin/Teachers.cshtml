@@ -1,7 +1,7 @@
 @model List<BibekSchool.ViewModels.TeacherViewModel>
 @{
     ViewData["Title"] = "Manage Teachers";
-    Layout = "_AdminLayout";
+    Layout = "_Layout";
 }
 
 <div class="dashboard">
@@ -34,16 +34,16 @@
     <div class="card">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
+                <table class="table table-hover table-mobile-stack mb-0">
                     <thead class="table-light">
                         <tr>
                             <th>Employee ID</th>
                             <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Qualification</th>
+                            <th data-mobile-hide>Email</th>
+                            <th data-mobile-hide>Phone</th>
+                            <th data-mobile-hide>Qualification</th>
                             <th>Designation</th>
-                            <th>Joining Date</th>
+                            <th data-mobile-hide>Joining Date</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>

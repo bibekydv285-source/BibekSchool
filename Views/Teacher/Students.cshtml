@@ -1,7 +1,7 @@
 @model List<BibekSchool.Models.Student>
 @{
     ViewData["Title"] = "Students";
-    Layout = "_TeacherLayout";
+    Layout = "_Layout";
     ViewBag.UnreadNotificationsCount = 0;
     var className = ViewBag.ClassName as string;
 }
@@ -24,14 +24,14 @@
         <div class="card">
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0">
+                    <table class="table table-hover table-mobile-stack mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th>Admission No.</th>
                                 <th>Name</th>
-                                <th>Roll No.</th>
-                                <th>Email</th>
-                                <th>Phone</th>
+                                <th data-mobile-hide>Roll No.</th>
+                                <th data-mobile-hide>Email</th>
+                                <th data-mobile-hide>Phone</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>

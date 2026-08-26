@@ -1,0 +1,118 @@
+/* ==========================================================================
+   AUTH.CSS — Authentication pages specific styles (Login, Register, ForgotPassword, ResetPassword)
+   Used by: All auth views (theme-auth class, loaded in _AuthLayout.cshtml)
+   ========================================================================== */
+
+/* ---------------- AUTH THEME VARIABLES ---------------- */
+
+.theme-auth {
+    --accent: var(--bs-primary);
+    --accent-hover: var(--bs-primary-dark);
+    --accent-bg: var(--bs-primary-light);
+    --auth-bg: #0f172a;
+    --auth-card-bg: #ffffff;
+    --auth-text-primary: #1e293b;
+    --auth-text-secondary: #64748b;
+    --input-bg: #f8fafc;
+    --input-border: #cbd5e1;
+    --focus-shadow: rgba(79, 110, 247, 0.15);
+}
+
+
+/* Password strength indicator (used in Register and ForgotPassword) */
+
+.password-strength {
+    height: 4px;
+    margin-top: var(--space-1);
+    overflow: hidden;
+    background: var(--input-border);
+    border-radius: 2px;
+}
+
+.password-strength-bar {
+    width: 0;
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.password-strength-weak {
+    width: 25%;
+    background: var(--bs-danger);
+}
+
+.password-strength-fair {
+    width: 50%;
+    background: var(--bs-warning);
+}
+
+.password-strength-good {
+    width: 75%;
+    background: var(--bs-info);
+}
+
+.password-strength-strong {
+    width: 100%;
+    background: var(--bs-success);
+}
+
+
+/* OTP Input styles (used in ForgotPassword) */
+
+.otp-input-group {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.otp-digit {
+    width: 44px !important;
+    height: 52px !important;
+    text-align: center;
+    font-size: 1.5rem !important;
+    font-weight: 600;
+    border-radius: 8px;
+}
+
+.otp-digit:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--focus-shadow);
+}
+
+.otp-digit.is-valid {
+    border-color: var(--bs-success);
+    background-color: rgba(34, 197, 94, 0.1);
+}
+
+.otp-digit.is-invalid {
+    border-color: var(--bs-danger);
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+@media (max-width: 480px) {
+    .otp-digit {
+        width: 36px !important;
+        height: 44px !important;
+        font-size: 1.25rem !important;
+    }
+}
+
+.form-step {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn:disabled {
+    opacity: 0.65;
+    pointer-events: none;
+}

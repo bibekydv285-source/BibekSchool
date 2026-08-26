@@ -1,976 +1,1271 @@
-/* Teacher Layout - Fixed Sidebar Layout with Dark Theme (Navy/Slate + Green Accents) */
+/* ==========================================================================
+   TEACHER.CSS — Teacher-specific premium dark theme
 
-/* ===== CSS Variables for Teacher Dark Theme ===== */
-.teacher-theme {
-    --sidebar-width: 260px;
-    --sidebar-collapsed-width: 70px;
-    --topbar-height: 60px;
-    --transition-speed: 0.3s;
-    /* Dark theme colors - Navy/Slate base with green accents */
-    --bg-primary: #0f172a; /* slate-900 - main background */
-    --bg-secondary: #1e293b; /* slate-800 - cards, sidebar */
-    --bg-tertiary: #334155; /* slate-700 - hover states */
-    --bg-card: #1e293b; /* slate-800 - card backgrounds */
-    --border-color: #334155; /* slate-700 - borders */
-    --text-primary: #f1f5f9; /* slate-100 - primary text */
-    --text-secondary: #94a3b8; /* slate-400 - secondary text */
-    --text-muted: #64748b; /* slate-500 - muted text */
-    /* Accent colors - Green (success) theme */
-    --accent-color: #10b981; /* emerald-500 - primary accent */
-    --accent-light: #064e3b; /* emerald-900 - accent backgrounds */
-    --accent-lighter: #059669; /* emerald-600 - hover */
-    --accent-bg: #022c22; /* emerald-950 - subtle backgrounds */
-    --primary-color: #3b82f6; /* blue-500 - used for a few badges/buttons */
-    /* Semantic colors */
-    --success-color: #10b981;
-    --success-bg: #064e3b;
-    --warning-color: #f59e0b;
-    --warning-bg: #78350f;
-    --danger-color: #ef4444;
-    --danger-bg: #7f1d1d;
-    --info-color: #06b6d4;
-    --info-bg: #164e63;
-    /* Shadows */
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.4);
-    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.5);
+   Used by:
+   - Teacher Dashboard
+   - All Teacher Views
+   - Teacher Notifications
+   - Teacher Forms
+   - Teacher Tables
+   - Teacher Modals
+
+   Theme class:
+   .theme-teacher
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. TEACHER THEME VARIABLES
+   ========================================================================== */
+
+.theme-teacher {
+    /* ----------------------------------------------------------------------
+       Accent Colors — Emerald
+       ---------------------------------------------------------------------- */
+
+    --accent: #34d399;
+    --accent-hover: #10b981;
+    --accent-dark: #059669;
+    --accent-light: #d1fae5;
+    --accent-bg: rgba(52, 211, 153, 0.12);
+    --accent-gradient: linear-gradient( 135deg, #34d399 0%, #10b981 50%, #059669 100% );
+    /* ----------------------------------------------------------------------
+       Main Background Colors
+       ---------------------------------------------------------------------- */
+
+    --content-bg: #0b1120;
+    --sidebar-bg: #111827;
+    --topbar-bg: rgba(17, 24, 39, 0.95);
+    --card-bg: #172033;
+    --card-bg-hover: #1c2940;
+    --input-bg: #111827;
+    --input-bg-focus: #172033;
+    /* ----------------------------------------------------------------------
+       Borders
+       ---------------------------------------------------------------------- */
+
+    --border: #263244;
+    --border-light: #334155;
+    --input-border: #334155;
+    --input-border-hover: #475569;
+    /* ----------------------------------------------------------------------
+       Typography
+       ---------------------------------------------------------------------- */
+
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-disabled: #64748b;
+    /* ----------------------------------------------------------------------
+       Hover Colors
+       ---------------------------------------------------------------------- */
+
+    --hover-bg: rgba(52, 211, 153, 0.10);
+    --sidebar-hover-bg: rgba(52, 211, 153, 0.10);
+    --sidebar-hover-color: #6ee7b7;
+    /* ----------------------------------------------------------------------
+       Sidebar
+       ---------------------------------------------------------------------- */
+
+    --sidebar-text: #f8fafc;
+    --sidebar-text-secondary: #cbd5e1;
+    --sidebar-active-bg: linear-gradient( 135deg, #10b981, #059669 );
+    --sidebar-active-color: #ffffff;
+    /* ----------------------------------------------------------------------
+       Focus
+       ---------------------------------------------------------------------- */
+
+    --focus-shadow: rgba(52, 211, 153, 0.22);
 }
 
-    /* =========================================================
-   APP SHELL LAYOUT  (fixed sidebar — cannot be broken by
-   later stylesheets changing display/position elsewhere)
-   ========================================================= */
-    .teacher-theme .app-shell {
-        min-height: 100vh;
-        background: var(--bg-primary);
+
+    /* ==========================================================================
+   2. GENERAL THEME
+   ========================================================================== */
+
+    .theme-teacher,
+    .theme-teacher body {
         color: var(--text-primary);
+        background: var(--content-bg);
     }
 
-    /* ===== Sidebar ===== */
-    .teacher-theme .sidebar {
-        position: fixed !important;
-        top: 0;
-        left: 0;
-        width: var(--sidebar-width) !important;
-        height: 100vh !important;
-        background: var(--bg-secondary);
-        border-right: 1px solid var(--border-color);
-        display: flex !important;
-        flex-direction: column !important;
-        z-index: 1000;
-        overflow: hidden;
-        transition: width var(--transition-speed) ease, transform var(--transition-speed) ease;
-    }
 
-    .teacher-theme .sidebar-header {
-        padding: 20px 16px;
-        border-bottom: 1px solid var(--border-color);
-        flex-shrink: 0;
-    }
+        /* ==========================================================================
+   3. PRIMARY BUTTON
+   ========================================================================== */
 
-    .teacher-theme .brand-link {
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-        color: var(--text-primary);
-        font-weight: 700;
-        font-size: 1.1rem;
-        gap: 12px;
-        transition: color 0.2s ease;
-        white-space: nowrap;
-    }
-
-        .teacher-theme .brand-link:hover {
-            color: var(--accent-color);
+        .theme-teacher .btn-primary {
+            color: #052e16;
+            background: linear-gradient( 135deg, #6ee7b7, #34d399 );
+            border-color: #34d399;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.18);
+            transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
         }
 
-        .teacher-theme .brand-link i {
-            color: var(--accent-color);
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
 
-        .teacher-theme .brand-link .badge {
-            flex-shrink: 0;
-        }
+            .theme-teacher .btn-primary:hover,
+            .theme-teacher .btn-primary:focus {
+                color: #ffffff;
+                background: linear-gradient( 135deg, #10b981, #059669 );
+                border-color: #10b981;
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(16, 185, 129, 0.28);
+            }
 
-    .teacher-theme .sidebar-nav {
-        flex: 1;
-        padding: 16px 12px;
-        overflow-y: auto;
-        min-height: 0;
-    }
 
-        /* Force the nav list to stay vertical no matter what other CSS says */
-        .teacher-theme .sidebar-nav ul.nav {
-            display: flex !important;
-            flex-direction: column !important;
-            flex-wrap: nowrap !important;
-        }
+            .theme-teacher .btn-primary:active {
+                transform: translateY(0);
+                box-shadow: 0 3px 8px rgba(16, 185, 129, 0.18);
+            }
 
-        .teacher-theme .sidebar-nav .nav-item {
-            width: 100%;
-        }
 
-        .teacher-theme .sidebar-nav .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 12px 14px;
-            color: var(--text-secondary);
-            border-radius: 10px;
+        /* ==========================================================================
+   4. OUTLINE PRIMARY BUTTON
+   ========================================================================== */
+
+        .theme-teacher .btn-outline-primary {
+            color: #6ee7b7;
+            background: transparent;
+            border-color: #059669;
             font-weight: 500;
-            font-size: 0.9rem;
-            margin-bottom: 4px;
-            transition: all 0.2s ease;
-            gap: 12px;
-            white-space: nowrap;
         }
 
-            .teacher-theme .sidebar-nav .nav-link i {
-                width: 22px;
-                height: 22px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1rem;
-                flex-shrink: 0;
+
+            .theme-teacher .btn-outline-primary:hover,
+            .theme-teacher .btn-outline-primary:focus {
+                color: #ffffff;
+                background: rgba(52, 211, 153, 0.12);
+                border-color: #34d399;
+                box-shadow: 0 4px 14px rgba(52, 211, 153, 0.15);
             }
 
-            .teacher-theme .sidebar-nav .nav-link:hover {
-                background: var(--accent-bg);
-                color: var(--accent-color);
+
+        /* ==========================================================================
+   5. FORMS
+   ========================================================================== */
+
+        .theme-teacher .form-control,
+        .theme-teacher .form-select {
+            color: var(--text-primary);
+            background-color: var(--input-bg);
+            border-color: var(--input-border);
+            transition: background-color var(--transition), border-color var(--transition), box-shadow var(--transition);
+        }
+
+
+            .theme-teacher .form-control::placeholder {
+                color: var(--text-muted);
+                opacity: 1;
             }
 
-            .teacher-theme .sidebar-nav .nav-link.active {
-                background: linear-gradient(135deg, var(--accent-color), #059669);
-                color: white;
-                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+
+            .theme-teacher .form-control:hover,
+            .theme-teacher .form-select:hover {
+                border-color: var(--input-border-hover);
             }
 
-                .teacher-theme .sidebar-nav .nav-link.active i {
-                    color: white;
+
+            .theme-teacher .form-control:focus,
+            .theme-teacher .form-select:focus {
+                color: var(--text-primary);
+                background-color: var(--input-bg-focus);
+                border-color: var(--accent);
+                box-shadow: 0 0 0 3px var(--focus-shadow);
+            }
+
+
+        /* Browser Autofill */
+
+        .theme-teacher input:-webkit-autofill,
+        .theme-teacher input:-webkit-autofill:hover,
+        .theme-teacher input:-webkit-autofill:focus {
+            -webkit-text-fill-color: var(--text-primary);
+            -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset;
+            transition: background-color 9999s ease-out 0s;
+        }
+
+
+        /* ==========================================================================
+   6. INPUT GROUP
+   ========================================================================== */
+
+        .theme-teacher .input-group-text {
+            color: var(--text-secondary);
+            background: #111827;
+            border-color: var(--input-border);
+        }
+
+
+        .theme-teacher .input-group:focus-within .input-group-text {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+
+        /* ==========================================================================
+   7. PASSWORD TOGGLE
+   ========================================================================== */
+
+        .theme-teacher .toggle-password {
+            color: var(--text-secondary);
+            background: var(--input-bg);
+            border-color: var(--input-border);
+        }
+
+
+            .theme-teacher .toggle-password:hover {
+                color: var(--accent);
+                background: rgba(52, 211, 153, 0.08);
+            }
+
+
+        /* ==========================================================================
+   8. CARDS
+   ========================================================================== */
+
+        .theme-teacher .card {
+            color: var(--text-primary);
+            background: var(--card-bg);
+            border-color: var(--border);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+            transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background-color var(--transition);
+        }
+
+
+            .theme-teacher .card:hover {
+                background: var(--card-bg-hover);
+                border-color: rgba(52, 211, 153, 0.22);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+                transform: translateY(-2px);
+            }
+
+
+        .theme-teacher .card-header,
+        .theme-teacher .card-footer {
+            color: var(--text-primary);
+            background: rgba(15, 23, 42, 0.45);
+            border-color: var(--border);
+        }
+
+
+        /* ==========================================================================
+   9. STAT CARDS
+   ========================================================================== */
+
+        .theme-teacher .stat-card {
+            position: relative;
+            overflow: hidden;
+            border-left: 4px solid var(--accent);
+        }
+
+
+            .theme-teacher .stat-card::after {
+                content: "";
+                position: absolute;
+                width: 130px;
+                height: 130px;
+                right: -50px;
+                bottom: -65px;
+                background: radial-gradient( circle, rgba(52, 211, 153, 0.10), transparent 70% );
+                pointer-events: none;
+            }
+
+
+        /* ==========================================================================
+   10. STAT ICONS
+   ========================================================================== */
+
+        .theme-teacher .stat-icon {
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+
+
+        .theme-teacher .stat-card:hover .stat-icon {
+            transform: scale(1.06) rotate(2deg);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.20);
+        }
+
+
+        .theme-teacher .stat-icon.bg-success-light {
+            color: #6ee7b7;
+            background: rgba(52, 211, 153, 0.12);
+        }
+
+
+        .theme-teacher .stat-icon.bg-primary-light {
+            color: #a5b4fc;
+            background: rgba(99, 102, 241, 0.12);
+        }
+
+
+        .theme-teacher .stat-icon.bg-info-light {
+            color: #67e8f9;
+            background: rgba(34, 211, 238, 0.12);
+        }
+
+
+        .theme-teacher .stat-icon.bg-warning-light {
+            color: #fcd34d;
+            background: rgba(245, 158, 11, 0.12);
+        }
+
+
+        .theme-teacher .stat-icon.bg-danger-light {
+            color: #fca5a5;
+            background: rgba(239, 68, 68, 0.12);
+        }
+
+
+        /* ==========================================================================
+   11. SIDEBAR
+   ========================================================================== */
+
+        .theme-teacher .sidebar {
+            background: linear-gradient( 180deg, #111827 0%, #0f172a 100% );
+        }
+
+
+        .theme-teacher .sidebar-header {
+            background: rgba(15, 23, 42, 0.55);
+        }
+
+
+        .theme-teacher .brand-link i {
+            color: #34d399;
+            filter: drop-shadow( 0 0 8px rgba(52, 211, 153, 0.25) );
+        }
+
+
+        /* Sidebar Navigation */
+
+        .theme-teacher .sidebar-nav .nav-link {
+            color: var(--sidebar-text-secondary);
+        }
+
+
+            .theme-teacher .sidebar-nav .nav-link:hover {
+                color: #6ee7b7;
+                background: var(--sidebar-hover-bg);
+            }
+
+
+            /* Active Navigation */
+
+            .theme-teacher .sidebar-nav .nav-link.active,
+            .theme-teacher .sidebar-nav .nav-link[aria-current="page"] {
+                color: var(--sidebar-active-color);
+                background: var(--sidebar-active-bg);
+                box-shadow: 0 6px 18px rgba(16, 185, 129, 0.22);
+            }
+
+
+                .theme-teacher .sidebar-nav .nav-link.active i,
+                .theme-teacher .sidebar-nav .nav-link[aria-current="page"] i {
+                    color: #ffffff;
                 }
 
-            .teacher-theme .sidebar-nav .nav-link .badge {
-                margin-left: auto;
+
+        /* Logout */
+
+        .theme-teacher .sidebar-nav form .nav-link:hover {
+            color: #fca5a5;
+            background: rgba(239, 68, 68, 0.12);
+        }
+
+
+        .theme-teacher .sidebar-nav form .nav-link i {
+            color: #f87171;
+        }
+
+
+        /* ==========================================================================
+   12. TOPBAR
+   ========================================================================== */
+
+        .theme-teacher .topbar {
+            background: rgba(17, 24, 39, 0.92);
+            border-color: rgba(148, 163, 184, 0.15);
+            -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(14px);
+        }
+
+
+            .theme-teacher .topbar .dropdown-toggle:hover {
+                color: #6ee7b7;
+                background: rgba(52, 211, 153, 0.10);
             }
 
-    /* Sidebar divider */
-    .teacher-theme .sidebar-divider {
-        margin: 16px 12px;
-        border-color: var(--border-color);
-        opacity: 0.5;
-    }
 
-    /* Logout button in sidebar */
-    .teacher-theme .sidebar-nav form .nav-link {
-        margin-bottom: 0;
-        padding: 12px 16px;
-    }
+        /* ==========================================================================
+   13. DROPDOWN
+   ========================================================================== */
 
-    .teacher-theme .sidebar-nav form .nav-link:hover {
-        background: var(--danger-light);
-        color: var(--danger-color);
-    }
-
-    .teacher-theme .sidebar-nav form .nav-link i {
-        color: var(--danger-color);
-    }
-
-    .teacher-theme .sidebar-nav form .nav-link:hover i {
-        color: var(--danger-color);
-    }
-
-    /* Collapsed sidebar (desktop toggle, optional) */
-    .teacher-theme .sidebar.collapsed {
-        width: var(--sidebar-collapsed-width) !important;
-    }
-
-        .teacher-theme .sidebar.collapsed ~ .main-content {
-            margin-left: var(--sidebar-collapsed-width);
+        .theme-teacher .dropdown-menu {
+            color: var(--text-primary);
+            background: #172033;
+            border-color: rgba(148, 163, 184, 0.16);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
         }
 
-        .teacher-theme .sidebar.collapsed .brand-link span,
-        .teacher-theme .sidebar.collapsed .nav-link span,
-        .teacher-theme .sidebar.collapsed .sidebar-header .badge {
-            display: none;
+
+        .theme-teacher .dropdown-item {
+            color: var(--text-secondary);
         }
 
-        .teacher-theme .sidebar.collapsed .nav-link {
-            justify-content: center;
-            padding: 12px;
+
+            .theme-teacher .dropdown-item:hover,
+            .theme-teacher .dropdown-item:focus {
+                color: #6ee7b7;
+                background: rgba(52, 211, 153, 0.10);
+            }
+
+
+                .theme-teacher .dropdown-item:hover i,
+                .theme-teacher .dropdown-item:focus i {
+                    color: #34d399;
+                }
+
+
+        .theme-teacher .dropdown-divider {
+            border-color: var(--border);
         }
 
-    /* ===== Sidebar overlay (mobile) ===== */
-    .teacher-theme .sidebar-overlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 999;
-    }
 
-        .teacher-theme .sidebar-overlay.show {
-            display: block;
+        /* ==========================================================================
+   14. TABLES
+   ========================================================================== */
+
+        .theme-teacher .table {
+            color: var(--text-primary);
         }
 
-    /* ===== Main content column (pushed right of the sidebar) ===== */
-    .teacher-theme .main-content {
-        margin-left: var(--sidebar-width);
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-        transition: margin-left var(--transition-speed) ease;
+
+            .theme-teacher .table th {
+                color: var(--text-secondary);
+                background: rgba(15, 23, 42, 0.55);
+                border-color: var(--border);
+            }
+
+
+            .theme-teacher .table td {
+                color: var(--text-primary);
+                border-color: var(--border);
+            }
+
+
+        .theme-teacher .table-hover tbody tr {
+            transition: background-color var(--transition-fast);
+        }
+
+
+            .theme-teacher .table-hover tbody tr:hover {
+                background: rgba(52, 211, 153, 0.06);
+            }
+
+
+        /* ==========================================================================
+   15. LIST GROUP
+   ========================================================================== */
+
+        .theme-teacher .list-group-item {
+            color: var(--text-primary);
+            background: var(--card-bg);
+            border-color: var(--border);
+        }
+
+
+            .theme-teacher .list-group-item:hover {
+                color: #6ee7b7;
+                background: rgba(52, 211, 153, 0.06);
+            }
+
+
+        /* ==========================================================================
+   16. PAGINATION
+   ========================================================================== */
+
+        .theme-teacher .page-link {
+            color: var(--text-secondary);
+            background: #172033;
+            border-color: var(--border);
+        }
+
+
+            .theme-teacher .page-link:hover {
+                color: #6ee7b7;
+                background: rgba(52, 211, 153, 0.10);
+                border-color: #059669;
+            }
+
+
+        .theme-teacher .page-item.active .page-link {
+            color: #ffffff;
+            background: linear-gradient( 135deg, #10b981, #059669 );
+            border-color: #10b981;
+        }
+
+
+        /* ==========================================================================
+   17. PROGRESS BAR
+   ========================================================================== */
+
+        .theme-teacher .progress {
+            background: rgba(148, 163, 184, 0.15);
+        }
+
+
+        .theme-teacher .progress-bar {
+            background: linear-gradient( 90deg, #34d399, #10b981 );
+            box-shadow: 0 0 10px rgba(52, 211, 153, 0.25);
+        }
+
+
+        /* ==========================================================================
+   18. ALERTS
+   ========================================================================== */
+
+        .theme-teacher .alert {
+            border-left-width: 4px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+        }
+
+
+        .theme-teacher .alert-success {
+            color: #a7f3d0;
+            background: rgba(6, 78, 59, 0.65);
+            border-left-color: #10b981;
+        }
+
+
+        .theme-teacher .alert-danger {
+            color: #fecaca;
+            background: rgba(127, 29, 29, 0.60);
+            border-left-color: #ef4444;
+        }
+
+
+        .theme-teacher .alert-warning {
+            color: #fde68a;
+            background: rgba(120, 53, 15, 0.60);
+            border-left-color: #f59e0b;
+        }
+
+
+        .theme-teacher .alert-info {
+            color: #a5f3fc;
+            background: rgba(22, 78, 99, 0.65);
+            border-left-color: #22d3ee;
+        }
+
+
+        /* ==========================================================================
+   19. MODALS
+   ========================================================================== */
+
+        .theme-teacher .modal-content {
+            color: var(--text-primary);
+            background: #172033;
+            border-color: rgba(148, 163, 184, 0.16);
+        }
+
+
+        .theme-teacher .modal-header,
+        .theme-teacher .modal-footer {
+            border-color: var(--border);
+        }
+
+
+        .theme-teacher .btn-close {
+            filter: invert(1) grayscale(1);
+            opacity: 0.8;
+        }
+
+
+            .theme-teacher .btn-close:hover {
+                opacity: 1;
+            }
+
+
+        /* ==========================================================================
+   20. TEXT COLORS
+   ========================================================================== */
+
+        .theme-teacher .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+
+        .theme-teacher .text-secondary {
+            color: var(--text-secondary) !important;
+        }
+
+
+        .theme-teacher .text-primary {
+            color: #6ee7b7 !important;
+        }
+
+
+        /* ==========================================================================
+   21. EMPTY STATE
+   ========================================================================== */
+
+        .theme-teacher .empty-state i {
+            color: rgba(52, 211, 153, 0.55);
+        }
+
+
+        .theme-teacher .empty-state h4,
+        .theme-teacher .empty-state h5,
+        .theme-teacher .empty-state h6 {
+            color: var(--text-primary);
+        }
+
+
+        .theme-teacher .empty-state p {
+            color: var(--text-muted);
+        }
+
+
+        /* ==========================================================================
+   22. TEXT SELECTION
+   ========================================================================== */
+
+        .theme-teacher ::selection {
+            color: #052e16;
+            background: #6ee7b7;
+        }
+
+
+/* ==========================================================================
+   23. SCROLLBAR
+   ========================================================================== */
+
+.theme-teacher {
+    scrollbar-color: #334155 #0b1120;
+}
+
+
+    .theme-teacher ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
     }
 
-    /* ===== Topbar ===== */
-    .teacher-theme .topbar {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        height: var(--topbar-height);
-        background: var(--bg-secondary);
-        border-bottom: 1px solid var(--border-color);
-        box-shadow: var(--shadow-sm);
+
+    .theme-teacher ::-webkit-scrollbar-track {
+        background: #0b1120;
     }
 
-    .teacher-theme .topbar-inner {
+
+    .theme-teacher ::-webkit-scrollbar-thumb {
+        background: #334155;
+        border-radius: var(--radius-full);
+    }
+
+
+        .theme-teacher ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+
+    /* ==========================================================================
+   24. ACCESSIBILITY
+   ========================================================================== */
+
+    .theme-teacher :focus-visible {
+        outline: 3px solid rgba(52, 211, 153, 0.65);
+        outline-offset: 2px;
+    }
+
+
+    /* ==========================================================================
+   25. DASHBOARD CARDS
+   ========================================================================== */
+
+    .theme-teacher .dashboard-card {
+        overflow: hidden;
+    }
+
+
+        .theme-teacher .dashboard-card .card-header {
+            min-height: 58px;
+            display: flex;
+            align-items: center;
+        }
+
+
+            .theme-teacher .dashboard-card .card-header h5 {
+                color: var(--text-primary);
+                font-weight: 600;
+            }
+
+
+    /* ==========================================================================
+   26. QUICK ACTIONS
+   ========================================================================== */
+
+    .theme-teacher .quick-actions .btn {
+        min-height: 44px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        height: 100%;
-        padding: 0 24px;
-        gap: 16px;
+        justify-content: flex-start;
+        text-align: left;
     }
 
-    .teacher-theme .topbar-title {
-        font-size: 1.15rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin: 0;
-        flex: 1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+
+        .theme-teacher .quick-actions .btn i {
+            width: 22px;
+            text-align: center;
+        }
+
+
+    /* ==========================================================================
+   27. TEACHER NOTIFICATIONS — MAIN FIX
+   ========================================================================== */
+
+    /*
+   IMPORTANT:
+   Bootstrap's .bg-light can make notification cards WHITE.
+   These selectors force notifications to stay inside the Teacher
+   dark theme.
+*/
+
+
+    /* Notification containers */
+
+    .theme-teacher .notification-list,
+    .theme-teacher .notifications-list,
+    .theme-teacher .teacher-notifications {
+        background: transparent !important;
     }
 
-    .teacher-theme .btn-ghost {
-        background: transparent;
-        border: none;
-        color: var(--text-secondary);
-        padding: 10px;
+
+        /* Every notification */
+
+        .theme-teacher .notification-item,
+        .theme-teacher .notification-list .list-group-item,
+        .theme-teacher .notifications-list .list-group-item,
+        .theme-teacher .teacher-notifications .list-group-item {
+            color: #f8fafc !important;
+            background: #172033 !important;
+            border-color: #263244 !important;
+            opacity: 1 !important;
+            box-shadow: none;
+        }
+
+
+            /* ==========================================================================
+   28. UNREAD NOTIFICATION
+   ========================================================================== */
+
+            .theme-teacher .notification-item.notification-unread,
+            .theme-teacher .notification-list .notification-unread,
+            .theme-teacher .notifications-list .notification-unread,
+            .theme-teacher .teacher-notifications .notification-unread {
+                color: #f8fafc !important;
+                background: linear-gradient( 90deg, rgba(52, 211, 153, 0.14) 0%, rgba(23, 32, 51, 0.98) 45%, #172033 100% ) !important;
+                border-left: 4px solid #34d399 !important;
+                border-top-color: #263244 !important;
+                border-right-color: #263244 !important;
+                border-bottom-color: #263244 !important;
+                box-shadow: inset 0 0 0 1px rgba(52, 211, 153, 0.08), 0 4px 14px rgba(0, 0, 0, 0.12) !important;
+            }
+
+
+            /* ==========================================================================
+   29. READ NOTIFICATION
+   ========================================================================== */
+
+            .theme-teacher .notification-item.notification-read,
+            .theme-teacher .notification-list .notification-read,
+            .theme-teacher .notifications-list .notification-read,
+            .theme-teacher .teacher-notifications .notification-read {
+                color: #cbd5e1 !important;
+                background: #172033 !important;
+                border-left: 4px solid transparent !important;
+            }
+
+
+            /* ==========================================================================
+   30. BOOTSTRAP BG-LIGHT OVERRIDE
+   ========================================================================== */
+
+            .theme-teacher .notification-item.bg-light,
+            .theme-teacher .notification-list .bg-light,
+            .theme-teacher .notifications-list .bg-light,
+            .theme-teacher .teacher-notifications .bg-light {
+                color: #f8fafc !important;
+                background: #172033 !important;
+            }
+
+
+            /* Unread + bg-light */
+
+            .theme-teacher .notification-item.notification-unread.bg-light,
+            .theme-teacher .notification-list .notification-unread.bg-light,
+            .theme-teacher .notifications-list .notification-unread.bg-light,
+            .theme-teacher .teacher-notifications .notification-unread.bg-light {
+                color: #f8fafc !important;
+                background: linear-gradient( 90deg, rgba(52, 211, 153, 0.14), rgba(23, 32, 51, 0.98) ) !important;
+                border-left: 4px solid #34d399 !important;
+            }
+
+
+            /* ==========================================================================
+   31. NOTIFICATION TITLE
+   ========================================================================== */
+
+            .theme-teacher .notification-item h5,
+            .theme-teacher .notification-item h6,
+            .theme-teacher .notification-item .notification-title,
+            .theme-teacher .notification-list h5,
+            .theme-teacher .notification-list h6,
+            .theme-teacher .notifications-list h5,
+            .theme-teacher .notifications-list h6 {
+                color: #f8fafc !important;
+                opacity: 1 !important;
+            }
+
+
+            .theme-teacher .notification-item.notification-unread h5,
+            .theme-teacher .notification-item.notification-unread h6,
+            .theme-teacher .notification-item.notification-unread .notification-title {
+                color: #ffffff !important;
+                font-weight: 700;
+            }
+
+
+            /* ==========================================================================
+   32. NOTIFICATION MESSAGE
+   ========================================================================== */
+
+            .theme-teacher .notification-item p,
+            .theme-teacher .notification-item .notification-message,
+            .theme-teacher .notification-list p,
+            .theme-teacher .notifications-list p {
+                color: #cbd5e1 !important;
+                opacity: 1 !important;
+            }
+
+
+            .theme-teacher .notification-item.notification-unread p,
+            .theme-teacher .notification-item.notification-unread .notification-message {
+                color: #e2e8f0 !important;
+            }
+
+
+            /* ==========================================================================
+   33. NOTIFICATION DATE / TIME
+   ========================================================================== */
+
+            .theme-teacher .notification-item small,
+            .theme-teacher .notification-item .notification-meta,
+            .theme-teacher .notification-item .text-muted,
+            .theme-teacher .notification-list small,
+            .theme-teacher .notifications-list small {
+                color: #94a3b8 !important;
+                opacity: 1 !important;
+            }
+
+
+            /* ==========================================================================
+   34. NOTIFICATION ICON
+   ========================================================================== */
+
+            .theme-teacher .notification-item .notification-icon,
+            .theme-teacher .notification-icon {
+                width: 42px;
+                height: 42px;
+                min-width: 42px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                color: #6ee7b7 !important;
+                background: rgba(52, 211, 153, 0.12) !important;
+                border: 1px solid rgba(52, 211, 153, 0.22) !important;
+                border-radius: 12px;
+                opacity: 1 !important;
+                transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+            }
+
+
+            .theme-teacher .notification-item.notification-unread .notification-icon {
+                color: #a7f3d0 !important;
+                background: rgba(52, 211, 153, 0.18) !important;
+                border-color: rgba(52, 211, 153, 0.35) !important;
+                box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.05) !important;
+            }
+
+
+            /* ==========================================================================
+   35. NOTIFICATION TYPE BADGE
+   ========================================================================== */
+
+            .theme-teacher .notification-item .badge,
+            .theme-teacher .notification-item .notification-type,
+            .theme-teacher .notification-item .notification-badge {
+                color: #d1fae5 !important;
+                background: rgba(52, 211, 153, 0.14) !important;
+                border: 1px solid rgba(52, 211, 153, 0.28) !important;
+            }
+
+
+                /* Info badge */
+
+                .theme-teacher .notification-item .bg-info,
+                .theme-teacher .notification-item .badge.bg-info {
+                    color: #cffafe !important;
+                    background: rgba(34, 211, 238, 0.16) !important;
+                    border: 1px solid rgba(34, 211, 238, 0.25) !important;
+                }
+
+
+    /* ==========================================================================
+   36. NEW BADGE
+   ========================================================================== */
+
+    .theme-teacher .notification-new-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        padding: 0.22rem 0.55rem;
+        color: #d1fae5 !important;
+        background: rgba(52, 211, 153, 0.14) !important;
+        border: 1px solid rgba(52, 211, 153, 0.28) !important;
+        border-radius: 999px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+
+    /* ==========================================================================
+   37. MARK AS READ
+   ========================================================================== */
+
+    .theme-teacher .notification-item .btn-success,
+    .theme-teacher .notification-item .btn-outline-success {
+        color: #6ee7b7 !important;
+        background: transparent !important;
+        border-color: rgba(52, 211, 153, 0.45) !important;
+    }
+
+
+        .theme-teacher .notification-item .btn-success:hover,
+        .theme-teacher .notification-item .btn-outline-success:hover {
+            color: #ffffff !important;
+            background: rgba(52, 211, 153, 0.14) !important;
+            border-color: #34d399 !important;
+        }
+
+
+    /* ==========================================================================
+   38. NOTIFICATION ARROW
+   ========================================================================== */
+
+    .theme-teacher .notification-arrow {
+        display: flex;
+        align-items: center;
+        color: #475569;
+        transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+
+    .theme-teacher .notification-item:hover .notification-arrow {
+        color: #6ee7b7;
+        transform: translateX(3px);
+    }
+
+
+    /* ==========================================================================
+   39. NOTIFICATION HOVER
+   ========================================================================== */
+
+    .theme-teacher .notification-item:hover,
+    .theme-teacher .notification-list .list-group-item:hover,
+    .theme-teacher .notifications-list .list-group-item:hover,
+    .theme-teacher .teacher-notifications .list-group-item:hover {
+        color: #f8fafc !important;
+        background: linear-gradient( 90deg, rgba(52, 211, 153, 0.10), rgba(23, 32, 51, 0.98) ) !important;
+        border-color: rgba(52, 211, 153, 0.20) !important;
+    }
+
+
+        .theme-teacher .notification-item:hover h5,
+        .theme-teacher .notification-item:hover h6,
+        .theme-teacher .notification-item:hover p,
+        .theme-teacher .notification-item:hover small {
+            opacity: 1 !important;
+        }
+
+
+    /* ==========================================================================
+   40. NOTIFICATION LINKS
+   ========================================================================== */
+
+    .theme-teacher .notification-item,
+    .theme-teacher .notification-item:visited {
+        text-decoration: none;
+        color: #f8fafc !important;
+    }
+
+
+        .theme-teacher .notification-item:hover,
+        .theme-teacher .notification-item:focus,
+        .theme-teacher .notification-item:active {
+            color: #ffffff !important;
+        }
+
+
+    /* ==========================================================================
+   41. NOTIFICATION HEADER
+   ========================================================================== */
+
+    .theme-teacher .notification-header-icon {
+        width: 36px;
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #6ee7b7;
+        background: rgba(52, 211, 153, 0.12);
+        border: 1px solid rgba(52, 211, 153, 0.24);
         border-radius: 10px;
-        font-size: 1.1rem;
-        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.10);
+    }
+
+
+    .theme-teacher .notification-unread-text {
+        color: #6ee7b7 !important;
+        font-size: 0.72rem;
+        font-weight: 600;
+    }
+
+
+    /* ==========================================================================
+   42. NOTIFICATION EMPTY STATE
+   ========================================================================== */
+
+    .theme-teacher .notification-empty {
+        color: var(--text-primary) !important;
+        background: #172033 !important;
+    }
+
+
+        .theme-teacher .notification-empty h5,
+        .theme-teacher .notification-empty h6 {
+            color: #f8fafc !important;
+        }
+
+
+        .theme-teacher .notification-empty p {
+            color: #94a3b8 !important;
+        }
+
+
+    .theme-teacher .notification-empty-icon {
+        width: 58px;
+        height: 58px;
+        margin: 0 auto;
         display: flex;
         align-items: center;
         justify-content: center;
+        color: #6ee7b7;
+        background: rgba(52, 211, 153, 0.10);
+        border: 1px solid rgba(52, 211, 153, 0.20);
+        border-radius: 16px;
+        font-size: 1.35rem;
     }
 
-        .teacher-theme .btn-ghost:hover {
-            background: var(--accent-bg);
-            color: var(--accent-color);
+
+    /* ==========================================================================
+   43. NOTIFICATION CARD
+   ========================================================================== */
+
+    .theme-teacher .notifications-card,
+    .theme-teacher .notification-card {
+        color: #f8fafc !important;
+        background: #172033 !important;
+        border: 1px solid #263244 !important;
+    }
+
+
+        .theme-teacher .notifications-card .card-body,
+        .theme-teacher .notification-card .card-body {
+            color: #f8fafc !important;
+            background: #172033 !important;
         }
 
-        .teacher-theme .btn-ghost:focus-visible {
-            outline: 2px solid var(--accent-color);
-            outline-offset: 2px;
+
+    /* ==========================================================================
+   44. PAGE NOTIFICATION CONTENT
+   ========================================================================== */
+
+    .theme-teacher .notifications-page,
+    .theme-teacher .notification-page {
+        color: #f8fafc;
+    }
+
+
+        .theme-teacher .notifications-page h1,
+        .theme-teacher .notification-page h1 {
+            color: #f8fafc;
         }
 
-    .teacher-theme .topbar .dropdown-toggle {
-        color: var(--text-secondary);
-        padding: 8px 12px;
+
+        .theme-teacher .notifications-page .lead,
+        .theme-teacher .notification-page .lead {
+            color: #94a3b8;
+        }
+
+
+    /* ==========================================================================
+   45. GENERAL BOOTSTRAP WHITE BACKGROUND PROTECTION
+   ========================================================================== */
+
+    .theme-teacher .bg-white {
+        background-color: var(--card-bg) !important;
+    }
+
+
+    .theme-teacher .notification-item.bg-white,
+    .theme-teacher .notification-list .bg-white,
+    .theme-teacher .notifications-list .bg-white {
+        color: #f8fafc !important;
+        background: #172033 !important;
+    }
+
+
+/* ==========================================================================
+   46. NOTIFICATION RESPONSIVE DESIGN
+   ========================================================================== */
+
+@media (max-width: 767.98px) {
+
+    .theme-teacher .notification-item,
+    .theme-teacher .notification-list .list-group-item,
+    .theme-teacher .notifications-list .list-group-item,
+    .theme-teacher .teacher-notifications .list-group-item {
+        color: #f8fafc !important;
+        background: #172033 !important;
+        padding: 0.9rem 0.85rem;
+    }
+
+
+        .theme-teacher .notification-item.notification-unread {
+            background: linear-gradient( 90deg, rgba(52, 211, 153, 0.14), #172033 ) !important;
+        }
+
+
+        .theme-teacher .notification-item h5,
+        .theme-teacher .notification-item h6 {
+            color: #f8fafc !important;
+            font-size: 0.9rem;
+        }
+
+
+        .theme-teacher .notification-item p {
+            color: #cbd5e1 !important;
+            font-size: 0.82rem;
+        }
+
+
+        .theme-teacher .notification-item small {
+            color: #94a3b8 !important;
+            font-size: 0.72rem;
+        }
+
+
+    .theme-teacher .notification-icon {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
         border-radius: 10px;
-        transition: all 0.2s ease;
     }
 
-        .teacher-theme .topbar .dropdown-toggle:hover {
-            background: var(--accent-bg);
-            color: var(--accent-color);
+
+    .theme-teacher .notification-new-badge {
+        font-size: 0.58rem;
+        padding: 0.18rem 0.45rem;
+    }
+
+
+    .theme-teacher .notification-item:hover {
+        transform: none !important;
+    }
+}
+
+
+/* ==========================================================================
+   47. REDUCED MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .theme-teacher .card,
+    .theme-teacher .btn-primary,
+    .theme-teacher .stat-icon,
+    .theme-teacher .sidebar-nav .nav-link,
+    .theme-teacher .notification-item,
+    .theme-teacher .notification-icon,
+    .theme-teacher .notification-arrow {
+        transition-duration: 0.01ms !important;
+    }
+
+
+        .theme-teacher .card:hover,
+        .theme-teacher .btn-primary:hover,
+        .theme-teacher .stat-card:hover .stat-icon,
+        .theme-teacher .notification-item:hover {
+            transform: none !important;
         }
-
-    .teacher-theme .topbar .dropdown-menu {
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        box-shadow: var(--shadow-lg);
-        padding: 8px;
-        margin-top: 8px;
-        min-width: 200px;
-    }
-
-    .teacher-theme .topbar .dropdown-item {
-        color: var(--text-primary);
-        border-radius: 8px;
-        padding: 10px 16px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        transition: all 0.2s ease;
-    }
-
-        .teacher-theme .topbar .dropdown-item:hover {
-            background: var(--accent-bg);
-            color: var(--accent-color);
-        }
-
-        .teacher-theme .topbar .dropdown-item i {
-            width: 20px;
-            text-align: center;
-            color: var(--text-secondary);
-        }
-
-        .teacher-theme .topbar .dropdown-item:hover i {
-            color: var(--accent-color);
-        }
-
-    .teacher-theme .topbar .dropdown-divider {
-        border-color: var(--border-color);
-        margin: 8px 0;
-    }
-
-    /* ===== Content Area ===== */
-    .teacher-theme .content {
-        flex: 1;
-        padding: 24px;
-        overflow-y: auto;
-        background: var(--bg-primary);
-        min-height: 0;
-    }
-
-/* =========================================================
-   RESPONSIVE — mobile sidebar slides in/out
-   ========================================================= */
-@media (max-width: 991px) {
-    .teacher-theme .sidebar {
-        transform: translateX(-100%);
-    }
-
-        .teacher-theme .sidebar.show {
-            transform: translateX(0);
-        }
-
-    .teacher-theme .main-content {
-        margin-left: 0 !important;
-    }
-
-    .teacher-theme #sidebarToggle {
-        display: flex !important;
-    }
 }
 
-@media (min-width: 992px) {
-    .teacher-theme #sidebarToggle {
-        display: none;
-    }
+
+/* ==========================================================================
+   48. FINAL NOTIFICATION SAFETY OVERRIDES
+   ========================================================================== */
+
+/*
+   These are intentionally placed at the END of the file.
+   They ensure notification-specific dark styling wins against
+   Bootstrap and other global styles.
+*/
+
+.theme-teacher .notification-item {
+    color: #f8fafc !important;
+    background-color: #172033 !important;
 }
 
-/* =========================================================
-   DASHBOARD SPECIFIC
-   ========================================================= */
-.teacher-theme .dashboard {
-    padding: 0;
-}
 
-.teacher-theme .stat-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    border-left-width: 4px;
-    transition: all 0.3s ease;
-    box-shadow: var(--shadow-sm);
-}
-
-    .teacher-theme .stat-card:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-lg);
+    .theme-teacher .notification-item.notification-unread {
+        color: #ffffff !important;
+        background-color: #172033 !important;
+        background-image: linear-gradient( 90deg, rgba(52, 211, 153, 0.14), rgba(23, 32, 51, 0.98) ) !important;
     }
 
-    .teacher-theme .stat-card.border-success {
-        border-left-color: var(--accent-color);
+
+    .theme-teacher .notification-item.notification-read {
+        color: #cbd5e1 !important;
+        background-color: #172033 !important;
     }
 
-    .teacher-theme .stat-card.border-info {
-        border-left-color: var(--info-color);
+
+    .theme-teacher .notification-item h6,
+    .theme-teacher .notification-item .notification-title {
+        color: #f8fafc !important;
     }
 
-    .teacher-theme .stat-card.border-warning {
-        border-left-color: var(--warning-color);
+
+    .theme-teacher .notification-item p,
+    .theme-teacher .notification-item .notification-message {
+        color: #cbd5e1 !important;
     }
 
-    .teacher-theme .stat-card.border-danger {
-        border-left-color: var(--danger-color);
+
+    .theme-teacher .notification-item small,
+    .theme-teacher .notification-item .notification-meta {
+        color: #94a3b8 !important;
     }
-
-.teacher-theme .stat-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-    .teacher-theme .stat-icon.bg-success-light {
-        background: var(--accent-bg);
-    }
-
-    .teacher-theme .stat-icon.bg-info-light {
-        background: var(--info-bg);
-    }
-
-    .teacher-theme .stat-icon.bg-warning-light {
-        background: var(--warning-bg);
-    }
-
-    .teacher-theme .stat-icon.bg-danger-light {
-        background: var(--danger-bg);
-    }
-
-    .teacher-theme .stat-icon i {
-        font-size: 1.75rem;
-    }
-
-.teacher-theme .stat-card h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    line-height: 1.2;
-    color: var(--text-primary);
-}
-
-.teacher-theme .stat-card h6 {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-    color: var(--text-secondary);
-}
-
-.teacher-theme .dashboard-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    box-shadow: var(--shadow-sm);
-    transition: box-shadow 0.3s ease;
-}
-
-    .teacher-theme .dashboard-card:hover {
-        box-shadow: var(--shadow-md);
-    }
-
-    .teacher-theme .dashboard-card .card-header {
-        background: var(--bg-tertiary);
-        border-bottom: 1px solid var(--border-color);
-        padding: 16px 20px;
-        border-radius: 16px 16px 0 0 !important;
-        font-weight: 600;
-        color: var(--text-primary);
-    }
-
-    .teacher-theme .dashboard-card .card-body {
-        padding: 20px;
-    }
-
-.teacher-theme .list-group-item {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--border-color);
-    padding: 14px 0;
-    color: var(--text-primary);
-    transition: all 0.2s ease;
-}
-
-    .teacher-theme .list-group-item:last-child {
-        border-bottom: none;
-    }
-
-    .teacher-theme .list-group-item:hover {
-        color: var(--accent-color);
-    }
-
-    .teacher-theme .list-group-item.bg-light {
-        background: var(--accent-bg) !important;
-        border-radius: 8px;
-        margin: 0 -20px;
-        padding: 14px 20px;
-    }
-
-    .teacher-theme .list-group-item h6 {
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 4px;
-    }
-
-    .teacher-theme .list-group-item small {
-        font-size: 0.8rem;
-        color: var(--text-muted);
-    }
-
-    .teacher-theme .list-group-item p {
-        font-size: 0.85rem;
-        color: var(--text-secondary);
-        margin-bottom: 0;
-        line-height: 1.5;
-    }
-
-.teacher-theme .quick-actions .btn {
-    border-radius: 10px;
-    font-weight: 500;
-    padding: 12px 16px;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.teacher-theme .quick-actions .btn-outline-success {
-    border-color: var(--accent-color);
-    color: var(--accent-color);
-    background: transparent;
-}
-
-    .teacher-theme .quick-actions .btn-outline-success:hover {
-        background: var(--accent-color);
-        color: white;
-    }
-
-.teacher-theme .quick-actions .btn-outline-info {
-    border-color: var(--info-color);
-    color: var(--info-color);
-    background: transparent;
-}
-
-    .teacher-theme .quick-actions .btn-outline-info:hover {
-        background: var(--info-color);
-        color: white;
-    }
-
-.teacher-theme .quick-actions .btn-outline-primary {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-    background: transparent;
-}
-
-    .teacher-theme .quick-actions .btn-outline-primary:hover {
-        background: var(--primary-color);
-        color: white;
-    }
-
-.teacher-theme .quick-actions .btn-outline-warning {
-    border-color: var(--warning-color);
-    color: var(--warning-color);
-    background: transparent;
-}
-
-    .teacher-theme .quick-actions .btn-outline-warning:hover {
-        background: var(--warning-color);
-        color: white;
-    }
-
-.teacher-theme .quick-actions .btn-outline-secondary {
-    border-color: var(--border-color);
-    color: var(--text-secondary);
-    background: transparent;
-}
-
-    .teacher-theme .quick-actions .btn-outline-secondary:hover {
-        background: var(--bg-tertiary);
-        color: var(--text-primary);
-    }
-
-.teacher-theme .empty-state {
-    padding: 48px 20px;
-    text-align: center;
-}
-
-    .teacher-theme .empty-state i {
-        font-size: 2.5rem;
-        color: var(--text-muted);
-        margin-bottom: 12px;
-    }
-
-    .teacher-theme .empty-state h4 {
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 8px;
-    }
-
-    .teacher-theme .empty-state p {
-        color: var(--text-secondary);
-        margin-bottom: 0;
-    }
-
-.teacher-theme .alert {
-    border-radius: 10px;
-    border: none;
-    padding: 14px 20px;
-}
-
-.teacher-theme .alert-success {
-    background: var(--success-bg);
-    color: #a7f3d0;
-    border-left: 3px solid var(--success-color);
-}
-
-.teacher-theme .alert-danger {
-    background: var(--danger-bg);
-    color: #fca5a5;
-    border-left: 3px solid var(--danger-color);
-}
-
-.teacher-theme .alert-warning {
-    background: var(--warning-bg);
-    color: #fcd34d;
-    border-left: 3px solid var(--warning-color);
-}
-
-.teacher-theme .alert-info {
-    background: var(--info-bg);
-    color: #a5f3fc;
-    border-left: 3px solid var(--info-color);
-}
-
-.teacher-theme .card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: var(--shadow-sm);
-}
-
-.teacher-theme .card-header {
-    background: var(--bg-tertiary);
-    border-bottom: 1px solid var(--border-color);
-    padding: 16px 20px;
-    border-radius: 12px 12px 0 0 !important;
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-.teacher-theme .card-body {
-    padding: 20px;
-    color: var(--text-primary);
-}
-
-.teacher-theme .card-footer {
-    background: var(--bg-tertiary);
-    border-top: 1px solid var(--border-color);
-    padding: 16px 20px;
-    border-radius: 0 0 12px 12px;
-}
-
-.teacher-theme .table {
-    color: var(--text-primary);
-}
-
-    .teacher-theme .table th {
-        background: var(--bg-tertiary);
-        font-weight: 600;
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--text-secondary);
-        border-bottom: 2px solid var(--border-color);
-        padding: 12px 16px;
-    }
-
-    .teacher-theme .table td {
-        padding: 12px 16px;
-        vertical-align: middle;
-        border-bottom: 1px solid var(--border-color);
-        color: var(--text-primary);
-    }
-
-.teacher-theme .table-hover tbody tr:hover {
-    background: var(--accent-bg);
-}
-
-.teacher-theme .table-responsive {
-    border-radius: 0 0 12px 12px;
-    overflow: hidden;
-}
-
-.teacher-theme .form-control, .teacher-theme .form-select {
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: 14px;
-    color: var(--text-primary);
-    transition: all 0.2s ease;
-}
-
-    .teacher-theme .form-control:focus, .teacher-theme .form-select:focus {
-        background: var(--bg-tertiary);
-        border-color: var(--accent-color);
-        box-shadow: 0 0 0 3px var(--accent-bg);
-        color: var(--text-primary);
-    }
-
-    .teacher-theme .form-control::placeholder {
-        color: var(--text-muted);
-    }
-
-.teacher-theme .form-label {
-    font-weight: 500;
-    color: var(--text-primary);
-    margin-bottom: 6px;
-}
-
-.teacher-theme .input-group-text {
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
-    border-right: none;
-    color: var(--text-secondary);
-}
-
-.teacher-theme .input-group .form-control {
-    border-left: none;
-    border-radius: 0 8px 8px 0;
-}
-
-.teacher-theme .input-group:focus-within .input-group-text {
-    border-color: var(--accent-color);
-    background: var(--accent-bg);
-    color: var(--accent-color);
-}
-
-.teacher-theme .btn {
-    border-radius: 8px;
-    font-weight: 500;
-    padding: 12px 24px;
-    transition: all 0.2s ease;
-}
-
-.teacher-theme .btn-primary {
-    background: var(--accent-color);
-    border-color: var(--accent-color);
-}
-
-    .teacher-theme .btn-primary:hover {
-        background: var(--accent-lighter);
-        border-color: var(--accent-lighter);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-
-.teacher-theme .btn-outline-primary {
-    border-color: var(--accent-color);
-    color: var(--accent-color);
-    background: transparent;
-}
-
-    .teacher-theme .btn-outline-primary:hover {
-        background: var(--accent-color);
-        color: white;
-    }
-
-.teacher-theme .btn-outline-secondary {
-    border-color: var(--border-color);
-    color: var(--text-secondary);
-    background: transparent;
-}
-
-    .teacher-theme .btn-outline-secondary:hover {
-        background: var(--bg-tertiary);
-        border-color: var(--text-secondary);
-        color: var(--text-primary);
-    }
-
-.teacher-theme .badge {
-    font-weight: 500;
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-}
-
-    .teacher-theme .badge.bg-success {
-        background: var(--accent-color) !important;
-    }
-
-    .teacher-theme .badge.bg-primary {
-        background: var(--primary-color) !important;
-    }
-
-    .teacher-theme .badge.bg-info {
-        background: var(--info-color) !important;
-    }
-
-    .teacher-theme .badge.bg-warning {
-        background: var(--warning-color) !important;
-    }
-
-    .teacher-theme .badge.bg-danger {
-        background: var(--danger-color) !important;
-    }
-
-    .teacher-theme .badge.bg-secondary {
-        background: var(--text-secondary) !important;
-    }
-
-.teacher-theme .progress {
-    border-radius: 10px;
-    overflow: hidden;
-    background: var(--bg-tertiary);
-    height: 8px;
-}
-
-.teacher-theme .progress-bar {
-    border-radius: 10px;
-    transition: width 0.3s ease;
-    background: var(--accent-color);
-}
-
-.teacher-theme .dropdown-menu {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    box-shadow: var(--shadow-lg);
-    padding: 8px;
-}
-
-.teacher-theme .dropdown-item {
-    border-radius: 6px;
-    padding: 10px 16px;
-    color: var(--text-primary);
-    transition: all 0.2s ease;
-}
-
-    .teacher-theme .dropdown-item:hover {
-        background: var(--accent-bg);
-        color: var(--accent-color);
-    }
-
-.teacher-theme .dropdown-divider {
-    border-color: var(--border-color);
-    margin: 8px 0;
-}
-
-.teacher-theme .modal-content {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    box-shadow: var(--shadow-xl);
-}
-
-.teacher-theme .modal-header {
-    border-bottom: 1px solid var(--border-color);
-    padding: 16px 24px;
-}
-
-.teacher-theme .modal-body {
-    padding: 24px;
-}
-
-.teacher-theme .modal-footer {
-    border-top: 1px solid var(--border-color);
-    padding: 16px 24px;
-}
-
-.teacher-theme .btn-close {
-    filter: invert(1) grayscale(1);
-    opacity: 0.5;
-}
-
-    .teacher-theme .btn-close:hover {
-        opacity: 1;
-    }
-
-.teacher-theme .pagination .page-link {
-    background: var(--bg-tertiary);
-    border-color: var(--border-color);
-    color: var(--text-primary);
-    padding: 8px 14px;
-    margin: 0 4px;
-    border-radius: 8px;
-}
-
-    .teacher-theme .pagination .page-link:hover {
-        background: var(--accent-bg);
-        border-color: var(--accent-color);
-        color: var(--accent-color);
-    }
-
-.teacher-theme .pagination .page-item.active .page-link {
-    background: var(--accent-color);
-    border-color: var(--accent-color);
-    color: white;
-}
-
-.teacher-theme ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-.teacher-theme ::-webkit-scrollbar-track {
-    background: var(--bg-primary);
-}
-
-.teacher-theme ::-webkit-scrollbar-thumb {
-    background: var(--bg-tertiary);
-    border-radius: 4px;
-}
-
-    .teacher-theme ::-webkit-scrollbar-thumb:hover {
-        background: var(--border-color);
-    }
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.teacher-theme .row.g-3 > * {
-    animation: fadeInUp 0.4s ease backwards;
-}
-
-    .teacher-theme .row.g-3 > *:nth-child(1) {
-        animation-delay: 0.05s;
-    }
-
-    .teacher-theme .row.g-3 > *:nth-child(2) {
-        animation-delay: 0.1s;
-    }
-
-    .teacher-theme .row.g-3 > *:nth-child(3) {
-        animation-delay: 0.15s;
-    }
-
-    .teacher-theme .row.g-3 > *:nth-child(4) {
-        animation-delay: 0.2s;
-    }
-
-.teacher-theme :focus-visible {
-    outline: 2px solid var(--accent-color);
-    outline-offset: 2px;
-}
-
-.teacher-theme .skip-link {
-    position: absolute;
-    top: -100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--accent-color);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    z-index: 9999;
-    text-decoration: none;
-    font-weight: 500;
-    transition: top 0.2s ease;
-}
-
-    .teacher-theme .skip-link:focus {
-        top: 10px;
-    }
-

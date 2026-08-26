@@ -20,8 +20,10 @@ namespace BibekSchool.Services
 
         public async Task<List<Notification>> GetUserNotificationsAsync(string userId, string? role = null, bool unreadOnly = false)
         {
-            var query = _context.Notifications
-                .Where(n => n.TargetUserId == userId || (n.TargetRole == role && n.IsGlobal));
+            var query = _context.Notifications.Where(n =>
+                n.TargetUserId == userId ||
+                (!string.IsNullOrEmpty(role) && n.TargetRole == role && n.IsGlobal)
+            );
 
             if (unreadOnly)
             {
@@ -37,7 +39,8 @@ namespace BibekSchool.Services
         public async Task<int> GetUnreadCountAsync(string userId, string? role = null)
         {
             return await _context.Notifications
-                .Where(n => (n.TargetUserId == userId || (n.TargetRole == role && n.IsGlobal)) && !n.IsRead)
+                .Where(n => (n.TargetUserId == userId ||
+                    (!string.IsNullOrEmpty(role) && n.TargetRole == role && n.IsGlobal)) && !n.IsRead)
                 .CountAsync();
         }
 
@@ -62,10 +65,16 @@ namespace BibekSchool.Services
             return notification;
         }
 
-        public async Task<bool> MarkAsReadAsync(int id, string userId)
+        public async Task<bool> MarkAsReadAsync(int id, string userId, string? role = null)
         {
-            var notification = await _context.Notifications
-                .FirstOrDefaultAsync(n => n.Id == id && (n.TargetUserId == userId || n.IsGlobal));
+            var query = _context.Notifications.Where(n => n.Id == id && (n.TargetUserId == userId || n.IsGlobal));
+            
+            if (!string.IsNullOrEmpty(role))
+            {
+                query = query.Where(n => n.TargetUserId == userId || (n.TargetRole == role && n.IsGlobal));
+            }
+
+            var notification = await query.FirstOrDefaultAsync();
 
             if (notification == null) return false;
 
@@ -92,10 +101,16 @@ namespace BibekSchool.Services
             return true;
         }
 
-        public async Task<bool> DeleteNotificationAsync(int id, string userId)
+        public async Task<bool> DeleteNotificationAsync(int id, string userId, string? role = null)
         {
-            var notification = await _context.Notifications
-                .FirstOrDefaultAsync(n => n.Id == id && (n.TargetUserId == userId || n.IsGlobal));
+            var query = _context.Notifications.Where(n => n.Id == id && (n.TargetUserId == userId || n.IsGlobal));
+            
+            if (!string.IsNullOrEmpty(role))
+            {
+                query = query.Where(n => n.TargetUserId == userId || (n.TargetRole == role && n.IsGlobal));
+            }
+
+            var notification = await query.FirstOrDefaultAsync();
 
             if (notification == null) return false;
 

@@ -6,14 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BibekSchool.Services
 {
-    public class TeacherService : ITeacherService
+    public class TeacherService : BaseService, ITeacherService
     {
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public TeacherService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public TeacherService(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context)
         {
-            _context = context;
             _userManager = userManager;
         }
 
@@ -339,7 +337,7 @@ namespace BibekSchool.Services
                 .ToListAsync();
 
             var pendingMarksCount = await _context.Marks
-                .Where(m => m.TeacherId == teacher.Id && m.ObtainedMarks == 0)
+                .Where(m => m.TeacherId == teacher.Id && m.ObtainedMarks == 0m)
                 .CountAsync();
 
             return new TeacherDashboardViewModel
@@ -403,23 +401,6 @@ namespace BibekSchool.Services
         {
             return await _context.TeacherAssignments
                 .AnyAsync(ta => ta.TeacherId == teacherId && ta.ClassId == classId && ta.SubjectId == subjectId && ta.IsActive);
-        }
-
-        private async Task LogAuditAsync(string userId, string action, string entityType, string entityId, string? oldValues, string? newValues)
-        {
-            var auditLog = new AuditLog
-            {
-                UserId = userId,
-                Action = action,
-                EntityType = entityType,
-                EntityId = entityId,
-                OldValues = oldValues,
-                NewValues = newValues,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            _context.AuditLogs.Add(auditLog);
-            await _context.SaveChangesAsync();
         }
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BibekSchool.Services;
+using System.Security.Claims;
 
 namespace BibekSchool.Controllers
 {
@@ -16,8 +17,11 @@ namespace BibekSchool.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            // Use priority role logic (MainAdmin > Admin > Teacher > Student)
+            var roles = User.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList();
+            var priorityRoles = new[] { "MainAdmin", "Admin", "Teacher", "Student" };
+            var role = priorityRoles.FirstOrDefault(r => roles.Contains(r)) ?? "Student";
 
             var notifications = await _notificationService.GetUserNotificationsAsync(userId!, role);
             return View(notifications);
@@ -27,10 +31,14 @@ namespace BibekSchool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> MarkAsRead(int id)
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var roles = User.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList();
+            var priorityRoles = new[] { "MainAdmin", "Admin", "Teacher", "Student" };
+            var role = priorityRoles.FirstOrDefault(r => roles.Contains(r)) ?? "Student";
+
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            await _notificationService.MarkAsReadAsync(id, userId);
+            await _notificationService.MarkAsReadAsync(id, userId, role);
             return Ok();
         }
 
@@ -38,8 +46,10 @@ namespace BibekSchool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> MarkAllAsRead()
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var roles = User.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList();
+            var priorityRoles = new[] { "MainAdmin", "Admin", "Teacher", "Student" };
+            var role = priorityRoles.FirstOrDefault(r => roles.Contains(r)) ?? "Student";
 
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
@@ -47,14 +57,18 @@ namespace BibekSchool.Controllers
             return Ok();
         }
 
-        [HttpPost]
+[HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var roles = User.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList();
+            var priorityRoles = new[] { "MainAdmin", "Admin", "Teacher", "Student" };
+            var role = priorityRoles.FirstOrDefault(r => roles.Contains(r)) ?? "Student";
+
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            await _notificationService.DeleteNotificationAsync(id, userId);
+            await _notificationService.DeleteNotificationAsync(id, userId, role);
             return Ok();
         }
     }

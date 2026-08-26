@@ -63,61 +63,145 @@ namespace BibekSchool.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
 
-            if (ModelState.IsValid)
+            try
             {
-                var user = await _userManager.FindByEmailAsync(model.UsernameOrEmail);
-                if (user == null)
+                if (ModelState.IsValid)
                 {
-                    user = await _userManager.FindByNameAsync(model.UsernameOrEmail);
-                }
+                    var input = model.UsernameOrEmail?.Trim() ?? string.Empty;
 
-                if (user == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid username/email or password.");
-                    return View(model);
-                }
-
-                if (!user.IsActive)
-                {
-                    ModelState.AddModelError(string.Empty, "Your account has been deactivated. Please contact administrator.");
-                    return View(model);
-                }
-
-                var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
-
-                if (result.Succeeded)
-                {
-                    user.LastLoginAt = DateTime.UtcNow;
-                    await _userManager.UpdateAsync(user);
-
-                    await _notificationService.CreateNotificationAsync(
-                        "Welcome back!",
-                        "You have successfully logged in.",
-                        user.Id,
-                        null,
-                        false,
-                        null,
-                        "System");
-
-                    var roles = await _userManager.GetRolesAsync(user);
-                    var role = roles.FirstOrDefault() ?? "Student";
-
-                    return role switch
+                    var user = await _userManager.FindByEmailAsync(input);
+                    var lookupMethod = "email";
+                    if (user == null)
                     {
-                        "MainAdmin" => RedirectToAction("Dashboard", "Admin"),
-                        "Admin" => RedirectToAction("Dashboard", "Admin"),
-                        "Teacher" => RedirectToAction("Dashboard", "Teacher"),
-                        "Student" => RedirectToAction("Dashboard", "Student"),
-                        _ => RedirectToAction("Dashboard", "Student")
-                    };
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid username/email or password.");
-                }
-            }
+                        user = await _userManager.FindByNameAsync(input);
+                        lookupMethod = "username";
+                    }
 
-            return View(model);
+                    _logger.LogInformation("Login attempt: input='{Input}', lookupMethod='{LookupMethod}', userFound={UserFound}, userId={UserId}, isActive={IsActive}, emailConfirmed={EmailConfirmed}",
+                        input, lookupMethod, user != null, user?.Id ?? "null", user?.IsActive, user?.EmailConfirmed);
+
+                    if (user == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid username/email or password.");
+                        return View(model);
+                    }
+
+                    if (!user.IsActive)
+                    {
+                        ModelState.AddModelError(string.Empty, "Your account has been deactivated. Please contact administrator.");
+                        return View(model);
+                    }
+
+                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
+
+                    _logger.LogInformation("PasswordSignInAsync result: Succeeded={Succeeded}, IsLockedOut={IsLockedOut}, IsNotAllowed={IsNotAllowed}, RequiresTwoFactor={RequiresTwoFactor}",
+                        result.Succeeded, result.IsLockedOut, result.IsNotAllowed, result.RequiresTwoFactor);
+
+                    if (result.Succeeded)
+                    {
+                        // ─────────────────────────────────────────────────────────
+                        // Non-critical side effects. A DB failure here (e.g. schema
+                        // drift on a column/table not yet migrated in production)
+                        // must NOT prevent an otherwise-successful login. Each is
+                        // isolated in its own try/catch and logged with the full
+                        // inner-exception chain instead of bubbling up.
+                        // ─────────────────────────────────────────────────────────
+                        try
+                        {
+                            user.LastLoginAt = DateTime.UtcNow;
+                            var updateResult = await _userManager.UpdateAsync(user);
+                            if (!updateResult.Succeeded)
+                            {
+                                _logger.LogWarning("Failed to update LastLoginAt for {UserId}: {Errors}",
+                                    user.Id, string.Join("; ", updateResult.Errors.Select(e => e.Description)));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            LogFullException(ex, $"Failed to update LastLoginAt for user {user.Id}");
+                        }
+
+                        try
+                        {
+                            await _notificationService.CreateNotificationAsync(
+                                "Welcome back!",
+                                "You have successfully logged in.",
+                                user.Id,
+                                null,
+                                false,
+                                null,
+                                "System");
+                        }
+                        catch (Exception ex)
+                        {
+                            LogFullException(ex, $"Failed to create login notification for user {user.Id}");
+                        }
+
+                        var roles = await _userManager.GetRolesAsync(user);
+                        // Prioritize roles: MainAdmin > Admin > Teacher > Student
+                        var priorityRoles = new[] { "MainAdmin", "Admin", "Teacher", "Student" };
+                        var role = priorityRoles.FirstOrDefault(r => roles.Contains(r)) ?? "Student";
+
+                        return role switch
+                        {
+                            "MainAdmin" => RedirectToAction("Dashboard", "Admin"),
+                            "Admin" => RedirectToAction("Dashboard", "Admin"),
+                            "Teacher" => RedirectToAction("Dashboard", "Teacher"),
+                            "Student" => RedirectToAction("Dashboard", "Student"),
+                            _ => RedirectToAction("Dashboard", "Student")
+                        };
+                    }
+                    else if (result.IsLockedOut)
+                    {
+                        ModelState.AddModelError(string.Empty, "Account locked out. Please try again later.");
+                    }
+                    else if (result.IsNotAllowed)
+                    {
+                        ModelState.AddModelError(string.Empty, "Login not allowed. Please confirm your email or contact administrator.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid username/email or password.");
+                    }
+                }
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                LogFullException(ex, $"LOGIN ERROR for {model.UsernameOrEmail}");
+
+                // Show the deepest inner exception message so it's actionable
+                // (still safe: EF/SQL error text, no secrets).
+                var rootMessage = GetRootException(ex).Message;
+                ModelState.AddModelError(string.Empty, $"Login error: {ex.GetType().Name} - {rootMessage}");
+                return View(model);
+            }
+        }
+
+        // Walks the InnerException chain and logs every level, so the true
+        // root cause (e.g. SqlException with column/constraint name) is
+        // always visible in the logs, not just the outer wrapper message.
+        private void LogFullException(Exception ex, string context)
+        {
+            var level = 0;
+            var current = ex;
+            while (current != null)
+            {
+                _logger.LogError(
+                    "{Context} — [Level {Level}] {ExType}: {Message}",
+                    context, level, current.GetType().Name, current.Message);
+                current = current.InnerException;
+                level++;
+            }
+        }
+
+        private static Exception GetRootException(Exception ex)
+        {
+            var current = ex;
+            while (current.InnerException != null)
+                current = current.InnerException;
+            return current;
         }
 
         [HttpGet]
@@ -195,8 +279,16 @@ namespace BibekSchool.Controllers
                         "/Account/Login",
                         "System");
 
-                    TempData["Success"] = "Registration Successful! Your student account has been created. Please log in to continue.";
-                    return RedirectToAction("Login", "Account");
+                    var loginUrl = $"{Request.Scheme}://{Request.Host}/Account/Login";
+                    await _emailService.SendRegistrationConfirmationAsync(
+                        user.Email!,
+                        user.FullName ?? "Student",
+                        "Student",
+                        loginUrl
+                    );
+
+                    TempData["Success"] = "Registration Successful! Your student account has been created. A confirmation email has been sent to your email address.";
+                    return View(model);
                 }
 
                 foreach (var error in result.Errors)
@@ -215,149 +307,128 @@ namespace BibekSchool.Controllers
             return View();
         }
 
-        // FIX: Added [FromBody] — the client sends this request as JSON
-        // (Content-Type: application/json, body: JSON.stringify(data)).
-        // Without [FromBody], ASP.NET Core's default model binder tries to
-        // read from form fields/query string instead, so model.Email was
-        // always null even though the user typed a valid email. This was
-        // the root cause of the "Email is required; Invalid email address"
-        // error shown in the screenshot.
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordViewModel model)
         {
-            // TEMP DIAGNOSTIC WRAPPER — remove this try/catch once the root
-            // cause is found. It surfaces the real exception message in the
-            // browser alert (via ForgotPasswordResponse.Message) so you don't
-            // need terminal/Visual Studio output access to see what's failing.
-            try
+            var email = model?.Email?.Trim() ?? string.Empty;
+
+            if (string.IsNullOrEmpty(email))
             {
-                var email = model?.Email?.Trim() ?? string.Empty;
-
-                if (string.IsNullOrEmpty(email))
-                {
-                    ModelState.AddModelError("Email", "Email is required");
-                }
-                else if (!IsValidEmail(email))
-                {
-                    ModelState.AddModelError("Email", "Invalid email address");
-                }
-
-                if (!ModelState.IsValid)
-                {
-                    var errorMessages = ModelState.Where(m => m.Value?.Errors.Count > 0)
-                        .SelectMany(k => k.Value!.Errors.Select(e => e.ErrorMessage))
-                        .ToList();
-
-                    return Json(new ForgotPasswordResponse
-                    {
-                        Success = false,
-                        Message = errorMessages.Any() ? string.Join("; ", errorMessages) : "Please enter a valid email address.",
-                        Errors = ModelState.Where(m => m.Value?.Errors.Count > 0)
-                            .ToDictionary(k => k.Key, v => v.Value?.Errors.Select(e => e.ErrorMessage).ToArray())
-                    });
-                }
-
-                var user = await _userManager.FindByEmailAsync(email);
-                if (user == null)
-                {
-                    return Json(new ForgotPasswordResponse
-                    {
-                        Success = false,
-                        Message = "If an account exists, a verification code has been sent."
-                    });
-                }
-
-                if (!user.IsActive)
-                {
-                    return Json(new ForgotPasswordResponse
-                    {
-                        Success = false,
-                        Message = "This account has been deactivated. Please contact administrator."
-                    });
-                }
-
-                var rateLimitResult = await CheckRateLimitAsync(user.Id);
-                if (!rateLimitResult.Success)
-                {
-                    return Json(new ForgotPasswordResponse
-                    {
-                        Success = false,
-                        Message = rateLimitResult.Message,
-                        ResendCooldown = rateLimitResult.CooldownSeconds
-                    });
-                }
-
-                var otpCode = GenerateOtpCode();
-                var expiryDate = DateTime.UtcNow.AddMinutes(_resetSettings.OtpExpiryMinutes);
-
-                var existingToken = await _context.PasswordResetTokens
-                    .FirstOrDefaultAsync(t => t.UserId == user.Id && !t.IsUsed && t.ExpiryDate > DateTime.UtcNow);
-
-                if (existingToken != null)
-                {
-                    existingToken.Token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    existingToken.OtpCode = otpCode;
-                    existingToken.ExpiryDate = expiryDate;
-                    existingToken.OtpAttempts = 0;
-                    existingToken.LastOtpSentAt = DateTime.UtcNow;
-                    existingToken.CreatedAt = DateTime.UtcNow;
-                    existingToken.IsUsed = false;
-                    existingToken.UsedAt = null;
-                }
-                else
-                {
-                    var resetToken = new PasswordResetToken
-                    {
-                        UserId = user.Id,
-                        Token = await _userManager.GeneratePasswordResetTokenAsync(user),
-                        OtpCode = otpCode,
-                        ExpiryDate = expiryDate,
-                        CreatedAt = DateTime.UtcNow,
-                        LastOtpSentAt = DateTime.UtcNow
-                    };
-                    _context.PasswordResetTokens.Add(resetToken);
-                }
-
-                await _context.SaveChangesAsync();
-
-                var emailSent = await _emailService.SendOtpEmailAsync(user.Email!, user.FullName ?? "User", otpCode, _resetSettings.OtpExpiryMinutes);
-
-                await _notificationService.CreateNotificationAsync(
-                    "Password Reset Code",
-                    $"Your password reset code is: {otpCode}. It expires in {_resetSettings.OtpExpiryMinutes} minutes.",
-                    user.Id,
-                    null,
-                    false,
-                    null,
-                    "System");
-
-                if (!emailSent)
-                {
-                    _logger.LogWarning("Failed to send OTP email to {Email}", user.Email);
-                }
-
-                return Json(new ForgotPasswordResponse
-                {
-                    Success = true,
-                    Message = "Verification code sent to your email.",
-                    Email = user.Email,
-                    ResendCooldown = _resetSettings.ResendCooldownSeconds
-                });
+                ModelState.AddModelError("Email", "Email is required");
             }
-            catch (Exception ex)
+            else if (!IsValidEmail(email))
             {
-                _logger.LogError(ex, "ForgotPassword failed for {Email}", model?.Email);
+                ModelState.AddModelError("Email", "Invalid email address");
+            }
 
-                // TEMP: returns the real exception to the browser for debugging.
-                // Remove ex.ToString() from Message before deploying anywhere real.
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelState.Where(m => m.Value?.Errors.Count > 0)
+                    .SelectMany(k => k.Value!.Errors.Select(e => e.ErrorMessage))
+                    .ToList();
+
                 return Json(new ForgotPasswordResponse
                 {
                     Success = false,
-                    Message = "DEBUG: " + ex.ToString()
+                    Message = errorMessages.Any() ? string.Join("; ", errorMessages) : "Please enter a valid email address.",
+                    Errors = ModelState.Where(m => m.Value?.Errors.Count > 0)
+                        .ToDictionary(k => k.Key, v => v.Value?.Errors.Select(e => e.ErrorMessage).ToArray())
                 });
             }
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return Json(new ForgotPasswordResponse
+                {
+                    Success = false,
+                    Message = "If an account exists, a verification code has been sent."
+                });
+            }
+
+            if (!user.IsActive)
+            {
+                return Json(new ForgotPasswordResponse
+                {
+                    Success = false,
+                    Message = "This account has been deactivated. Please contact administrator."
+                });
+            }
+
+            var rateLimitResult = await CheckRateLimitAsync(user.Id);
+            if (!rateLimitResult.Success)
+            {
+                return Json(new ForgotPasswordResponse
+                {
+                    Success = false,
+                    Message = rateLimitResult.Message,
+                    ResendCooldown = rateLimitResult.CooldownSeconds
+                });
+            }
+
+            var otpCode = GenerateOtpCode();
+            var expiryDate = DateTime.UtcNow.AddMinutes(_resetSettings.OtpExpiryMinutes);
+
+            var existingToken = await _context.PasswordResetTokens
+                .FirstOrDefaultAsync(t => t.UserId == user.Id && !t.IsUsed && t.ExpiryDate > DateTime.UtcNow);
+
+            if (existingToken != null)
+            {
+                existingToken.Token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                existingToken.OtpCode = otpCode;
+                existingToken.ExpiryDate = expiryDate;
+                existingToken.OtpAttempts = 0;
+                existingToken.LastOtpSentAt = DateTime.UtcNow;
+                existingToken.CreatedAt = DateTime.UtcNow;
+                existingToken.IsUsed = false;
+                existingToken.UsedAt = null;
+            }
+            else
+            {
+                var resetToken = new PasswordResetToken
+                {
+                    UserId = user.Id,
+                    Token = await _userManager.GeneratePasswordResetTokenAsync(user),
+                    OtpCode = otpCode,
+                    ExpiryDate = expiryDate,
+                    CreatedAt = DateTime.UtcNow,
+                    LastOtpSentAt = DateTime.UtcNow
+                };
+                _context.PasswordResetTokens.Add(resetToken);
+            }
+
+            await _context.SaveChangesAsync();
+
+            var (emailSent, emailError) = await _emailService.SendOtpEmailAsync(user.Email!, user.FullName ?? "User", otpCode, _resetSettings.OtpExpiryMinutes);
+
+            await _notificationService.CreateNotificationAsync(
+                "Password Reset Code",
+                $"Your password reset code is: {otpCode}. It expires in {_resetSettings.OtpExpiryMinutes} minutes.",
+                user.Id,
+                null,
+                false,
+                null,
+                "System");
+
+            if (!emailSent)
+            {
+                _logger.LogError("Failed to send OTP email to {Email} - {Error}", user.Email, emailError);
+                return Json(new ForgotPasswordResponse
+                {
+                    Success = false,
+                    Message = $"DEBUG: {emailError}"
+                });
+            }
+
+            return Json(new ForgotPasswordResponse
+            {
+                Success = true,
+                Message = "Verification code sent to your email.",
+                Email = user.Email,
+                ResendCooldown = _resetSettings.ResendCooldownSeconds
+            });
         }
 
         [HttpPost]
@@ -433,7 +504,7 @@ namespace BibekSchool.Controllers
 
             await _context.SaveChangesAsync();
 
-            var emailSent = await _emailService.SendOtpEmailAsync(user.Email!, user.FullName ?? "User", otpCode, _resetSettings.OtpExpiryMinutes);
+            var (emailSent, emailError) = await _emailService.SendOtpEmailAsync(user.Email!, user.FullName ?? "User", otpCode, _resetSettings.OtpExpiryMinutes);
 
             await _notificationService.CreateNotificationAsync(
                 "Password Reset Code (Resent)",
@@ -446,7 +517,12 @@ namespace BibekSchool.Controllers
 
             if (!emailSent)
             {
-                _logger.LogWarning("Failed to send OTP email to {Email}", user.Email);
+                _logger.LogError("Failed to send OTP email to {Email} - {Error}", user.Email, emailError);
+                return Json(new ResendOtpResponse
+                {
+                    Success = false,
+                    Message = $"DEBUG: {emailError}"
+                });
             }
 
             return Json(new ResendOtpResponse
@@ -601,9 +677,26 @@ namespace BibekSchool.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetPassword(ResetPasswordWithOtpViewModel model)
+        public async Task<IActionResult> ResetPassword()
         {
-            var email = model.Email?.Trim() ?? string.Empty;
+            var isFormData = Request.HasFormContentType;
+            string email, otpCode, newPassword, confirmPassword;
+
+            if (isFormData)
+            {
+                email = Request.Form["Email"].ToString().Trim();
+                otpCode = Request.Form["OtpCode"].ToString().Trim();
+                newPassword = Request.Form["NewPassword"].ToString();
+                confirmPassword = Request.Form["ConfirmPassword"].ToString();
+            }
+            else
+            {
+                var model = await Request.ReadFromJsonAsync<ResetPasswordWithOtpViewModel>();
+                email = model?.Email?.Trim() ?? string.Empty;
+                otpCode = model?.OtpCode?.Trim() ?? string.Empty;
+                newPassword = model?.NewPassword ?? string.Empty;
+                confirmPassword = model?.ConfirmPassword ?? string.Empty;
+            }
 
             if (string.IsNullOrEmpty(email))
             {
@@ -614,8 +707,33 @@ namespace BibekSchool.Controllers
                 ModelState.AddModelError("Email", "Invalid email address");
             }
 
+            if (string.IsNullOrEmpty(otpCode))
+            {
+                ModelState.AddModelError("OtpCode", "Verification code is required");
+            }
+            else if (otpCode.Length != 6)
+            {
+                ModelState.AddModelError("OtpCode", "Invalid verification code format");
+            }
+
+            if (string.IsNullOrEmpty(newPassword))
+            {
+                ModelState.AddModelError("NewPassword", "New password is required");
+            }
+            else if (newPassword.Length < 6)
+            {
+                ModelState.AddModelError("NewPassword", "Password must be at least 6 characters");
+            }
+
+            if (newPassword != confirmPassword)
+            {
+                ModelState.AddModelError("ConfirmPassword", "Passwords do not match");
+            }
+
             var isAjax = Request.Headers["X-Requested-With"] == "XMLHttpRequest" ||
                          Request.Headers["Accept"].ToString().Contains("application/json");
+
+            ResetPasswordWithOtpViewModel viewModel = null!;
 
             if (!ModelState.IsValid)
             {
@@ -629,7 +747,8 @@ namespace BibekSchool.Controllers
                             .ToDictionary(k => k.Key, v => v.Value?.Errors.Select(e => e.ErrorMessage).ToArray())
                     });
                 }
-                return View(model);
+                viewModel = new ResetPasswordWithOtpViewModel { Email = email };
+                return View(viewModel);
             }
 
             var user = await _userManager.FindByEmailAsync(email);
@@ -644,13 +763,14 @@ namespace BibekSchool.Controllers
                     });
                 }
                 ModelState.AddModelError(string.Empty, "Invalid reset attempt.");
-                return View(model);
+                viewModel = new ResetPasswordWithOtpViewModel { Email = email };
+                return View(viewModel);
             }
 
             var resetToken = await _context.PasswordResetTokens
                 .FirstOrDefaultAsync(t => t.UserId == user.Id && t.IsUsed && t.UsedAt != null && t.ExpiryDate > DateTime.UtcNow);
 
-            if (resetToken == null || resetToken.OtpCode != model.OtpCode)
+            if (resetToken == null || resetToken.OtpCode != otpCode)
             {
                 if (isAjax)
                 {
@@ -661,10 +781,11 @@ namespace BibekSchool.Controllers
                     });
                 }
                 ModelState.AddModelError(string.Empty, "Invalid or expired verification code.");
-                return View(model);
+                viewModel = new ResetPasswordWithOtpViewModel { Email = email };
+                return View(viewModel);
             }
 
-            var result = await _userManager.ResetPasswordAsync(user, resetToken.Token, model.NewPassword);
+            var result = await _userManager.ResetPasswordAsync(user, resetToken.Token, newPassword);
             if (result.Succeeded)
             {
                 await _notificationService.CreateNotificationAsync(
@@ -706,7 +827,8 @@ namespace BibekSchool.Controllers
                 });
             }
 
-            return View(model);
+            viewModel = new ResetPasswordWithOtpViewModel { Email = email };
+            return View(viewModel);
         }
 
         [HttpPost]

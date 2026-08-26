@@ -65,9 +65,9 @@ namespace BibekSchool.Models
         public DateTime? UpdatedAt { get; set; }
 
         [NotMapped]
-        public bool IsPassed => ObtainedMarks >= PassMarks;
+        public bool IsPassed => ObtainedMarks >= (decimal)PassMarks;
 
         [NotMapped]
-        public decimal Percentage => FullMarks > 0 ? (ObtainedMarks / FullMarks) * 100 : 0;
+        public decimal Percentage => FullMarks > 0 ? Math.Round((ObtainedMarks / FullMarks) * 100, 2) : 0;
     }
 }

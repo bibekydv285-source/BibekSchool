@@ -14,7 +14,7 @@ namespace BibekSchool.Services
         Task<Mark> UpdateMarkAsync(MarkViewModel model, string updatedBy);
         Task<bool> DeleteMarkAsync(int id, string deletedBy);
         Task<bool> BulkCreateMarksAsync(List<MarkViewModel> models, string createdBy);
-        Task<string> CalculateGradeAsync(decimal obtainedMarks, int fullMarks, int passMarks);
+        string CalculateGrade(decimal obtainedMarks, int fullMarks, int passMarks);
         Task<decimal> CalculatePercentageAsync(decimal obtainedMarks, int fullMarks);
     }
 }

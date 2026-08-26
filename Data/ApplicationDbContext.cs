@@ -148,6 +148,7 @@ namespace BibekSchool.Data
 
             builder.Entity<PasswordResetToken>(entity =>
             {
+                entity.Property(e => e.Token).HasMaxLength(450);
                 entity.HasIndex(e => e.Token).IsUnique();
                 entity.HasIndex(e => e.UserId);
                 entity.HasOne(e => e.User)
@@ -182,34 +183,19 @@ namespace BibekSchool.Data
 
         private void UpdateTimestamps()
         {
+            var now = DateTime.UtcNow;
             var entries = ChangeTracker.Entries()
-                .Where(e => e.Entity is Student || e.Entity is Teacher || e.Entity is SchoolClass ||
-                           e.Entity is Subject || e.Entity is TeacherAssignment || e.Entity is Mark ||
-                           e.Entity is Result || e.Entity is ApplicationUser);
+                .Where(e => e.Entity is ITrackableTimestamps);
 
             foreach (var entry in entries)
             {
                 if (entry.State == EntityState.Added)
                 {
-                    if (entry.Entity is Student s) s.CreatedAt = DateTime.UtcNow;
-                    else if (entry.Entity is Teacher t) t.CreatedAt = DateTime.UtcNow;
-                    else if (entry.Entity is SchoolClass c) c.CreatedAt = DateTime.UtcNow;
-                    else if (entry.Entity is Subject sub) sub.CreatedAt = DateTime.UtcNow;
-                    else if (entry.Entity is TeacherAssignment ta) ta.CreatedAt = DateTime.UtcNow;
-                    else if (entry.Entity is Mark m) m.CreatedAt = DateTime.UtcNow;
-                    else if (entry.Entity is Result r) r.CreatedAt = DateTime.UtcNow;
-                    else if (entry.Entity is ApplicationUser u) u.CreatedAt = DateTime.UtcNow;
+                    ((ITrackableTimestamps)entry.Entity).CreatedAt = now;
                 }
                 else if (entry.State == EntityState.Modified)
                 {
-                    if (entry.Entity is Student s) s.UpdatedAt = DateTime.UtcNow;
-                    else if (entry.Entity is Teacher t) t.UpdatedAt = DateTime.UtcNow;
-                    else if (entry.Entity is SchoolClass c) c.UpdatedAt = DateTime.UtcNow;
-                    else if (entry.Entity is Subject sub) sub.UpdatedAt = DateTime.UtcNow;
-                    else if (entry.Entity is TeacherAssignment ta) ta.UpdatedAt = DateTime.UtcNow;
-                    else if (entry.Entity is Mark m) m.UpdatedAt = DateTime.UtcNow;
-                    else if (entry.Entity is Result r) r.UpdatedAt = DateTime.UtcNow;
-                    else if (entry.Entity is ApplicationUser u) u.UpdatedAt = DateTime.UtcNow;
+                    ((ITrackableTimestamps)entry.Entity).UpdatedAt = now;
                 }
             }
         }

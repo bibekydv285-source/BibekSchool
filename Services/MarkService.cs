@@ -5,13 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BibekSchool.Services
 {
-    public class MarkService : IMarkService
+    public class MarkService : BaseService, IMarkService
     {
-        private readonly ApplicationDbContext _context;
-
-        public MarkService(ApplicationDbContext context)
+        public MarkService(ApplicationDbContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<Mark?> GetMarkByIdAsync(int id)
@@ -168,7 +165,7 @@ namespace BibekSchool.Services
 
         public async Task<Mark> CreateMarkAsync(MarkViewModel model, string createdBy)
         {
-            var grade = await CalculateGradeAsync(model.ObtainedMarks, model.FullMarks, model.PassMarks);
+            var grade = CalculateGrade(model.ObtainedMarks, model.FullMarks, model.PassMarks);
 
             var mark = new Mark
             {
@@ -203,7 +200,7 @@ namespace BibekSchool.Services
 
             var oldValues = System.Text.Json.JsonSerializer.Serialize(mark);
 
-            var grade = await CalculateGradeAsync(model.ObtainedMarks, model.FullMarks, model.PassMarks);
+            var grade = CalculateGrade(model.ObtainedMarks, model.FullMarks, model.PassMarks);
 
             mark.StudentId = model.StudentId;
             mark.SubjectId = model.SubjectId;
@@ -246,7 +243,7 @@ namespace BibekSchool.Services
 
             foreach (var model in models)
             {
-                var grade = await CalculateGradeAsync(model.ObtainedMarks, model.FullMarks, model.PassMarks);
+var grade = CalculateGrade(model.ObtainedMarks, model.FullMarks, model.PassMarks);
 
                 marks.Add(new Mark
                 {
@@ -277,7 +274,7 @@ namespace BibekSchool.Services
             return true;
         }
 
-        public async Task<string> CalculateGradeAsync(decimal obtainedMarks, int fullMarks, int passMarks)
+        public string CalculateGrade(decimal obtainedMarks, int fullMarks, int passMarks)
         {
             if (obtainedMarks < passMarks)
                 return "F";
@@ -300,23 +297,6 @@ namespace BibekSchool.Services
         {
             if (fullMarks == 0) return 0;
             return Math.Round((obtainedMarks / fullMarks) * 100, 2);
-        }
-
-        private async Task LogAuditAsync(string userId, string action, string entityType, string entityId, string? oldValues, string? newValues)
-        {
-            var auditLog = new AuditLog
-            {
-                UserId = userId,
-                Action = action,
-                EntityType = entityType,
-                EntityId = entityId,
-                OldValues = oldValues,
-                NewValues = newValues,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            _context.AuditLogs.Add(auditLog);
-            await _context.SaveChangesAsync();
         }
     }
 }

@@ -6,14 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BibekSchool.Services
 {
-    public class StudentService : IStudentService
+    public class StudentService : BaseService, IStudentService
     {
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public StudentService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public StudentService(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context)
         {
-            _context = context;
             _userManager = userManager;
         }
 
@@ -274,7 +272,9 @@ namespace BibekSchool.Services
                 .OrderByDescending(r => r.CreatedAt)
                 .FirstOrDefaultAsync();
 
-            var averagePercentage = recentMarks.Any() ? recentMarks.Average(m => m.Percentage) : 0;
+            var averagePercentage = recentMarks.Any() 
+                ? (decimal)recentMarks.Average(m => m.FullMarks > 0 ? (double)m.ObtainedMarks / m.FullMarks * 100 : 0) 
+                : 0m;
 
             return new StudentDashboardViewModel
             {
@@ -319,23 +319,6 @@ namespace BibekSchool.Services
         public async Task<bool> IsStudentInClassAsync(int studentId, int classId)
         {
             return await _context.Students.AnyAsync(s => s.Id == studentId && s.ClassId == classId);
-        }
-
-        private async Task LogAuditAsync(string userId, string action, string entityType, string entityId, string? oldValues, string? newValues)
-        {
-            var auditLog = new AuditLog
-            {
-                UserId = userId,
-                Action = action,
-                EntityType = entityType,
-                EntityId = entityId,
-                OldValues = oldValues,
-                NewValues = newValues,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            _context.AuditLogs.Add(auditLog);
-            await _context.SaveChangesAsync();
         }
     }
 }

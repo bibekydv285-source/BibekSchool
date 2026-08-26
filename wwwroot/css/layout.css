@@ -1,0 +1,584 @@
+/* ==========================================================================
+   LAYOUT.CSS — Application shell, sidebar, topbar, main content, auth layout
+   Used by: _Layout.cshtml (all dashboard pages), _AuthLayout.cshtml (auth pages)
+   ========================================================================== */
+
+/* ==========================================================================
+   1. APPLICATION SHELL
+   ========================================================================== */
+
+.app-shell {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    background: var(--content-bg);
+    color: var(--text-primary);
+}
+
+
+/* ==========================================================================
+   2. SIDEBAR
+   ========================================================================== */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100dvh;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    z-index: var(--z-fixed);
+    overflow: hidden;
+    transition: width var(--transition), transform var(--transition);
+}
+
+.sidebar-header {
+    flex-shrink: 0;
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--border);
+}
+
+.brand-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--sidebar-text);
+    font-size: 1.125rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.brand-link i {
+    flex-shrink: 0;
+    color: var(--accent);
+    font-size: 1.5rem;
+}
+
+.brand-link:hover {
+    color: var(--accent);
+}
+
+
+/* Sidebar navigation */
+
+.sidebar-nav {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: var(--space-4) var(--space-3);
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+.sidebar-nav .nav {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.sidebar-nav .nav-item {
+    width: 100%;
+}
+
+.sidebar-nav .nav-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    min-height: 44px;
+    margin-bottom: var(--space-1);
+    padding: 0.75rem 1rem;
+    color: var(--sidebar-text-secondary);
+    border-radius: var(--radius-md);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color var(--transition), color var(--transition);
+    touch-action: manipulation;
+}
+
+.sidebar-nav .nav-link i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    min-width: 1.25rem;
+    font-size: 1rem;
+}
+
+.sidebar-nav .nav-link:hover {
+    background: var(--sidebar-hover-bg);
+    color: var(--sidebar-hover-color);
+}
+
+.sidebar-nav .nav-link.active {
+    background: var(--sidebar-active-bg);
+    color: var(--sidebar-active-color);
+    box-shadow: 0 4px 12px var(--focus-shadow);
+}
+
+.sidebar-nav .nav-link.active i {
+    color: var(--sidebar-active-color);
+}
+
+.sidebar-nav .nav-link .badge {
+    margin-left: auto;
+}
+
+
+/* Logout */
+
+.sidebar-nav form {
+    margin: 0;
+}
+
+.sidebar-nav form .nav-link {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.sidebar-nav form .nav-link:hover {
+    background: var(--bs-danger-light);
+    color: var(--bs-danger);
+}
+
+.sidebar-nav form .nav-link i {
+    color: var(--bs-danger);
+}
+
+
+/* ==========================================================================
+   3. SIDEBAR OVERLAY
+   ========================================================================== */
+
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: calc(var(--z-fixed) - 1);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    pointer-events: none; /* Prevent clicks when not shown */
+}
+
+.sidebar-overlay.show {
+    display: block;
+    pointer-events: auto; /* Allow clicks to close sidebar when shown */
+}
+
+/* Safety: Ensure overlay is never visible on desktop (>= 992px) */
+@media (min-width: 992px) {
+    .sidebar-overlay {
+        display: none !important;
+        pointer-events: none !important;
+    }
+}
+
+
+/* ==========================================================================
+   4. MAIN CONTENT
+   ========================================================================== */
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - var(--sidebar-width));
+    min-width: 0;
+    min-height: 100vh;
+    margin-left: var(--sidebar-width);
+    background: var(--content-bg);
+    transition: margin-left var(--transition);
+}
+
+
+/* ==========================================================================
+   5. TOPBAR
+   ========================================================================== */
+
+.topbar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: var(--topbar-height);
+    flex-shrink: 0;
+    background: var(--topbar-bg);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    z-index: var(--z-sticky);
+}
+
+.topbar-inner {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 var(--space-6);
+    gap: var(--space-4);
+}
+
+.topbar-title {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.125rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.topbar .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+}
+
+.topbar .dropdown-toggle:hover {
+    background: var(--hover-bg);
+    color: var(--accent);
+}
+
+
+/* ==========================================================================
+   6. MOBILE USER MENU
+   ========================================================================== */
+
+.mobile-user-menu {
+    display: none;
+}
+
+.mobile-user-menu .btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.5rem;
+}
+
+
+/* ==========================================================================
+   7. CONTENT
+   ========================================================================== */
+
+.content {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: var(--space-6);
+    background: var(--content-bg);
+    overflow-x: hidden;
+}
+
+
+/* ==========================================================================
+   8. COLLAPSED SIDEBAR
+   ========================================================================== */
+
+.sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+.sidebar.collapsed + .main-content,
+.sidebar.collapsed ~ .main-content {
+    width: calc(100% - var(--sidebar-collapsed-width));
+    margin-left: var(--sidebar-collapsed-width);
+}
+
+.sidebar.collapsed .brand-link span,
+.sidebar.collapsed .nav-link span,
+.sidebar.collapsed .sidebar-header .badge {
+    display: none;
+}
+
+.sidebar.collapsed .nav-link {
+    justify-content: center;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+.sidebar.collapsed .nav-link i {
+    margin: 0;
+}
+
+
+/* ==========================================================================
+   9. AUTH PAGES LAYOUT
+   ========================================================================== */
+
+.auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 100dvh;
+    padding: 1.5rem;
+    background: var(--auth-bg, #0f172a);
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 480px;
+}
+
+.auth-card {
+    width: 100%;
+    overflow: hidden;
+    background: var(--auth-card-bg, #ffffff);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+    animation: slideUp 0.4s ease;
+}
+
+.auth-header {
+    padding: 2rem 1.5rem;
+    background: linear-gradient( 135deg, var(--accent), var(--accent-hover) );
+    color: #ffffff;
+    text-align: center;
+}
+
+.auth-header .logo i {
+    font-size: 3rem;
+}
+
+.auth-header h2 {
+    margin-bottom: var(--space-1);
+    color: #ffffff;
+}
+
+.auth-header p {
+    margin-bottom: 0;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.auth-card form {
+    padding: 2rem 2.5rem;
+}
+
+.auth-card .form-label {
+    color: var(--auth-text-primary, #1e293b);
+    font-weight: 600;
+}
+
+.auth-card .form-control,
+.auth-card .form-select {
+    min-height: 50px;
+    background: var(--input-bg);
+}
+
+.auth-card .btn-lg {
+    min-height: 50px;
+    font-weight: 600;
+}
+
+.auth-footer {
+    padding: 1rem 2.5rem 1.5rem;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+}
+
+.auth-footer .text-muted {
+    color: var(--auth-text-secondary) !important;
+}
+
+
+/* Register */
+
+.register-section-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-5) 0 var(--space-4);
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-bg-tertiary);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-md);
+    color: var(--auth-text-primary);
+    font-size: 0.9375rem;
+    font-weight: 700;
+}
+
+.register-section-title i {
+    color: var(--accent);
+}
+
+.register-section-title.credentials {
+    border-left-color: var(--bs-success);
+}
+
+.register-section-title.credentials i {
+    color: var(--bs-success);
+}
+
+
+/* ==========================================================================
+   10. MOBILE — <= 991px
+   ========================================================================== */
+
+@media (max-width: 991.98px) {
+
+    :root {
+        --topbar-height: 56px;
+    }
+
+    .sidebar {
+        width: min(var(--sidebar-width), 85vw);
+        max-width: 85vw;
+        transform: translateX(-105%);
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        width: 100%;
+        margin-left: 0 !important;
+    }
+
+    .sidebar.collapsed {
+        width: min(var(--sidebar-width), 85vw);
+    }
+
+    .sidebar.collapsed + .main-content,
+    .sidebar.collapsed ~ .main-content {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .sidebar.collapsed .brand-link span,
+    .sidebar.collapsed .nav-link span,
+    .sidebar.collapsed .sidebar-header .badge {
+        display: inline;
+    }
+
+    .sidebar.collapsed .nav-link {
+        justify-content: flex-start;
+        padding: 1rem;
+    }
+
+    .topbar-inner {
+        padding: 0 var(--space-4);
+    }
+
+    #sidebarToggle {
+        display: flex !important;
+        position: relative;
+        min-width: 44px;
+        min-height: 44px;
+        z-index: calc(var(--z-fixed) + 1);
+        touch-action: manipulation;
+    }
+
+    .topbar > .dropdown {
+        display: none;
+    }
+
+    .mobile-user-menu {
+        display: flex;
+        align-items: center;
+    }
+
+    .content {
+        padding: var(--space-4);
+    }
+
+    body.sidebar-open {
+        overflow: hidden;
+        overscroll-behavior: none;
+    }
+}
+
+
+/* ==========================================================================
+   11. MOBILE — <= 767px
+   ========================================================================== */
+
+@media (max-width: 767.98px) {
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1.25rem;
+    }
+
+    h4 {
+        font-size: 1.125rem;
+    }
+
+    .content {
+        padding: var(--space-3);
+    }
+
+    .topbar-title {
+        font-size: 1rem;
+    }
+
+    .topbar-inner {
+        gap: var(--space-2);
+        padding: 0 var(--space-3);
+    }
+
+    .card {
+        margin-bottom: var(--space-3);
+        border-radius: var(--radius-md);
+    }
+
+    .card-header {
+        padding: var(--space-3) var(--space-4);
+    }
+
+    .card-body {
+        padding: var(--space-4);
+    }
+
+    .card-footer {
+        padding: var(--space-3) var(--space-4);
+    }
+
+    .card-header.d-flex {
+        flex-wrap: wrap;
+        gap: var(--space-2);
+    }
+
+    .card-header.d-flex .btn {
+        flex-shrink: 0;
+    }
+
+    .btn {
+        min-height: 48px;
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9375rem;
+    }
+
+    .btn-sm {
+        min-height: 44px;
+        padding: 0.5rem 1rem;
+    }
+
+    .btn-lg {
+        min-height: 52px;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 48px;
+        padding: 0.75rem 1rem;
+        font-size: 16px;
+    }
+}

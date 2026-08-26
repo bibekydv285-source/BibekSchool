@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace BibekSchool.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser, ITrackableTimestamps
     {
         [Required]
         [StringLength(100)]

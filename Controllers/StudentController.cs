@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BibekSchool.Models;
+using Microsoft.Extensions.Logging;
 using BibekSchool.Services;
 using BibekSchool.ViewModels;
 
@@ -11,17 +12,26 @@ namespace BibekSchool.Controllers
     {
         private readonly IStudentService _studentService;
         private readonly INotificationService _notificationService;
+        private readonly ILogger<StudentController> _logger;
 
-        public StudentController(IStudentService studentService, INotificationService notificationService)
+        public StudentController(IStudentService studentService, INotificationService notificationService, ILogger<StudentController> logger)
         {
             _studentService = studentService;
             _notificationService = notificationService;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Dashboard()
         {
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userId)) return RedirectToAction("Login", "Account");
+
+            var student = await _studentService.GetStudentByUserIdAsync(userId);
+            if (student == null)
+            {
+                // User has Student role but no Student profile - redirect to AccessDenied
+                return RedirectToAction("AccessDenied", "Account");
+            }
 
             var model = await _studentService.GetStudentDashboardAsync(userId);
             return View(model);
@@ -106,7 +116,7 @@ namespace BibekSchool.Controllers
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            await _notificationService.MarkAsReadAsync(id, userId);
+            await _notificationService.MarkAsReadAsync(id, userId, "Student");
             return Ok();
         }
     }

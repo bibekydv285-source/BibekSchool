@@ -8,8 +8,8 @@ namespace BibekSchool.Services
         Task<List<Notification>> GetUserNotificationsAsync(string userId, string? role = null, bool unreadOnly = false);
         Task<int> GetUnreadCountAsync(string userId, string? role = null);
         Task<Notification> CreateNotificationAsync(string title, string message, string? targetUserId = null, string? targetRole = null, bool isGlobal = false, string? referenceLink = null, string? createdBy = null);
-        Task<bool> MarkAsReadAsync(int id, string userId);
+        Task<bool> MarkAsReadAsync(int id, string userId, string? role = null);
         Task<bool> MarkAllAsReadAsync(string userId, string? role = null);
-        Task<bool> DeleteNotificationAsync(int id, string userId);
+        Task<bool> DeleteNotificationAsync(int id, string userId, string? role = null);
     }
 }
