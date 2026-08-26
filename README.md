@@ -1,6 +1,6 @@
 # 🏫 BibekSchool
 
-A **multi-role School Management System** built with **ASP.NET Core MVC**, designed to streamline school operations for Admins, Teachers, and Students — all from one clean, unified dashboard.
+A **multi-role School Management System** built with **ASP.NET Core MVC**, designed to streamline school operations for Admins, Teachers, and Students  all from one clean, unified dashboard.
 
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=flat&logo=dotnet)
 ![ASP.NET Core MVC](https://img.shields.io/badge/ASP.NET%20Core-MVC-blue?style=flat&logo=dotnet)
@@ -14,7 +14,7 @@ A **multi-role School Management System** built with **ASP.NET Core MVC**, desig
 
 ## 📖 About the Project
 
-**BibekSchool** is a full-featured school management web application that brings together everyone in a school's daily workflow — administrators, teachers, and students — into a single, role-based system. It was built to solve real problems schools face: scattered mark sheets, manual result calculation, and poor communication between staff and students.
+**BibekSchool** is a full-featured school management web application that brings together everyone in a school's daily workflow administrators, teachers, and students into a single, role-based system. It was built to solve real problems schools face: scattered mark sheets, manual result calculation, and poor communication between staff and students.
 
 The system supports **four distinct roles**, each with its own dashboard, permissions, and views — ensuring the right people see the right data.
 
@@ -168,9 +168,10 @@ Contributions are welcome! To contribute:
 
 ## 📄 License
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+© 2026 Bibek Yadav. All Rights Reserved.
 
----
+This project is proprietary. You may view the source code, but copying,
+modifying, or redistributing it without permission is not allowed.
 
 ## 📬 Contact
 
