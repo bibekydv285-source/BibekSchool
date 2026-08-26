@@ -16,7 +16,7 @@ A **multi-role School Management System** built with **ASP.NET Core MVC**, desig
 
 **BibekSchool** is a full-featured school management web application that brings together everyone in a school's daily workflow administrators, teachers, and students into a single, role-based system. It was built to solve real problems schools face: scattered mark sheets, manual result calculation, and poor communication between staff and students.
 
-The system supports **four distinct roles**, each with its own dashboard, permissions, and views — ensuring the right people see the right data.
+The system supports **four distinct roles**, each with its own dashboard, permissions, and views ensuring the right people see the right data.
 
 ---
 
